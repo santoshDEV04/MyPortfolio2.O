@@ -1,0 +1,40 @@
+.focus-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.focus-word {
+  position: relative;
+  font-weight: 800;
+  transition: filter 0.3s ease;
+  will-change: filter;
+}
+
+.focus-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  box-shadow: 0 0 40px var(--glow-color);
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.corner {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-color: var(--border-color);
+  border-style: solid;
+}
+
+.top-left { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
+.top-right { top: -2px; right: -2px; border-width: 2px 2px 0 0; }
+.bottom-left { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; }
+.bottom-right { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
