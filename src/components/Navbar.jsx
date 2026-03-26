@@ -7,7 +7,7 @@ import { useTransition, PAGE_NAMES } from '../context/TransitionContext';
 const navLinks = [
   { path: '/', label: 'Home' },
   { path: '/about', label: 'About' },
-  { path: '/projects', label: 'Projects' },
+  { path: '/projects', label: 'Work' },
   { path: '/skills', label: 'Skills' },
   { path: '/contact', label: 'Contact' },
 ];

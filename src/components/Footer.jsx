@@ -11,7 +11,7 @@ export default function Footer() {
       <footer className="relative w-full border-t border-border mt-32 py-12 flex flex-col md:flex-row justify-between items-center px-8 md:px-16 text-sm text-muted overflow-hidden group">
         <div className="absolute top-0 left-0 w-full h-[1px] bg-accent origin-left scale-x-0 transition-transform duration-1000 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:scale-x-100" />
         
-        <p className="mb-4 md:mb-0">© 2025 Developer. Built with React.</p>
+        <p className="mb-4 md:mb-0">© 2025 Developer. Built with PASSION.</p>
         
         <div className="flex gap-6">
           <a href="https://github.com/santoshDEV04" target="_blank" rel="noopener noreferrer" className="hover:text-fg transition-colors"><Github size={18} /></a>

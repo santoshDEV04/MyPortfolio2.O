@@ -121,9 +121,18 @@ export default function Contact() {
             ))}
 
             <div className="mt-auto pt-16">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-2">Local Time & Location</h3>
-              <p className="text-lg">San Francisco, CA</p>
-              <p className="text-muted">{new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}</p>
+                    <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-2">
+        Local Time & Location
+      </h3>
+      <p className="text-lg">Bhubaneswar, Odisha, India 🇮🇳</p>
+      <p className="text-muted">
+        {new Date().toLocaleTimeString('en-IN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Asia/Kolkata',
+          timeZoneName: 'short',
+        })}
+      </p>
             </div>
           </div>
         </div>
