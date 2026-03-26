@@ -40,8 +40,8 @@ export default function App() {
           </Routes>
         </AnimatePresence>
       </main>
-
-      {location.pathname !== '/contact' && <Footer />}
+{/* 
+      {location.pathname !== '/contact' && <Footer />} */}
     </TransitionProvider>
   );
 }

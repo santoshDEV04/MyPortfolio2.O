@@ -20,6 +20,7 @@ import MagneticButton from '../components/MagneticButton';
 import PageTransition from '../components/PageTransition';
 import GhostText from '../components/GhostText';
 import { useLoader } from '../context/LoaderContext';
+import Footer from '../components/Footer';
 
 gsap.registerPlugin(TextPlugin, ScrollTrigger);
 
