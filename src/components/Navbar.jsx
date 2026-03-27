@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 import gsap from 'gsap';
 import { useTransition, PAGE_NAMES } from '../context/TransitionContext';
 
-const navLinks = [
+const NAV_LINKS = [
   { path: '/', label: 'Home' },
   { path: '/about', label: 'About' },
   { path: '/projects', label: 'Work' },
@@ -12,72 +12,78 @@ const navLinks = [
   { path: '/contact', label: 'Contact' },
 ];
 
+const SOCIAL_LINKS = [
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/santosh-kumar-dash-417a30274/',
+  },
+  { label: 'Github', href: 'https://github.com/santoshDEV04' },
+  { label: 'LeetCode', href: 'https://leetcode.com/u/Santosh_ku04/' },
+];
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { setPendingLabel } = useTransition();
+
   const menuRef = useRef(null);
   const tl = useRef(null);
 
-  // Custom navigation handler to sync with GSAP
   const handleNavigation = (e, path) => {
     e.preventDefault();
     if (path === location.pathname) {
       setMenuOpen(false);
       return;
     }
-    
-    // Set the target label globally for the transition overlay
+
     setPendingLabel(PAGE_NAMES[path]);
-    
     setMenuOpen(false);
-    
-    // Wait for menu reverse animation to finish before navigating
-    // Menu duration is 0.85s, we give it a slight buffer
+
+    // Wait for the reverse animation (duration is ~0.85s)
     setTimeout(() => {
       navigate(path);
-    }, 800);
+    }, 850);
   };
 
   useEffect(() => {
-    // Start completely off-screen to the right
-    gsap.set(menuRef.current, { xPercent: 100 });
+    // gsap.context ensures clean up and prevents React strict-mode bugs
+    let ctx = gsap.context(() => {
+      tl.current = gsap.timeline({ paused: true });
 
-    tl.current = gsap.timeline({ paused: true });
+      // 1. Sleek clip-path curtain reveal for the background
+      tl.current.to(menuRef.current, {
+        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+        duration: 0.85,
+        ease: 'power4.inOut',
+      });
 
-    // Panel slides in from right
-    tl.current.to(menuRef.current, {
-      xPercent: 0,
-      duration: 0.85,
-      ease: 'power4.inOut',
+      // 2. High-end masked text reveal with slight skew
+      tl.current.fromTo(
+        '.menu-link-inner',
+        { y: '110%', skewY: 5 },
+        {
+          y: '0%',
+          skewY: 0,
+          duration: 0.8,
+          stagger: 0.05,
+          ease: 'power4.out',
+        },
+        '-=0.4' // Overlap with the background reveal
+      );
+
+      // 3. Fade in footer and eyebrow text
+      tl.current.fromTo(
+        ['.menu-eyebrow', '.menu-footer'],
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' },
+        '-=0.5'
+      );
     });
 
-    // Staggered nav links roll up from below
-    tl.current.fromTo(
-      '.menu-link-wrapper',
-      { y: 80, opacity: 0, rotateX: -30 },
-      {
-        y: 0,
-        opacity: 1,
-        rotateX: 0,
-        duration: 0.75,
-        stagger: 0.08,
-        ease: 'power3.out',
-      },
-      '-=0.45'
-    );
-
-    // Footer fades in
-    tl.current.fromTo(
-      '.menu-footer',
-      { opacity: 0, y: 12 },
-      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
-      '-=0.5'
-    );
+    return () => ctx.revert();
   }, []);
 
-  // Play / reverse timeline and lock scroll
   useEffect(() => {
     if (menuOpen) {
       tl.current.play();
@@ -86,32 +92,38 @@ export default function Navbar() {
       tl.current.reverse();
       document.body.style.overflow = '';
     }
+
     return () => {
       document.body.style.overflow = '';
     };
   }, [menuOpen]);
 
-  // Handle outside items click or global close if needed
-  // (Previously handled route change here, now handled by handleNavigation)
-
-  // Hover highlight + dim siblings
+  // Premium hover effect: Shift right, change color, dim siblings
   const handleLinkHover = (e, isEnter) => {
     if (isEnter) {
       gsap.to(e.currentTarget, {
-        x: 24,
+        x: 30,
         color: 'var(--accent)',
-        duration: 0.35,
-        ease: 'power2.out',
+        duration: 0.4,
+        ease: 'power3.out',
       });
-      gsap.to('.menu-link:not(:hover)', { opacity: 0.18, duration: 0.35 });
+      gsap.to('.menu-link:not(:hover)', {
+        opacity: 0.15,
+        scale: 0.98,
+        duration: 0.4,
+      });
     } else {
       gsap.to(e.currentTarget, {
         x: 0,
         color: 'inherit',
-        duration: 0.35,
-        ease: 'power2.out',
+        duration: 0.4,
+        ease: 'power3.out',
       });
-      gsap.to('.menu-link', { opacity: 1, duration: 0.35 });
+      gsap.to('.menu-link', {
+        opacity: 1,
+        scale: 1,
+        duration: 0.4,
+      });
     }
   };
 
@@ -120,7 +132,7 @@ export default function Navbar() {
       {/* ── HAMBURGER BUTTON ── */}
       <div className="fixed top-6 right-6 sm:top-8 sm:right-8 z-[130]">
         <button
-          onClick={() => setMenuOpen((prev) => !prev)}
+          onClick={() => setMenuOpen(prev => !prev)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           className="
@@ -128,21 +140,19 @@ export default function Navbar() {
             w-12 h-12 sm:w-14 sm:h-14
             rounded-full
             bg-black/40 border border-white/10 backdrop-blur-md
-            text-white
-            hover:bg-white hover:text-black
+            text-white hover:bg-white hover:text-black
             transition-colors duration-500
             overflow-hidden group
             focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
           "
         >
-          {/* Accent ripple on hover */}
-          <div className="
-            absolute inset-0 rounded-full bg-accent/20
-            scale-0 group-hover:scale-100
-            transition-transform duration-500 will-change-transform
-          " />
+          <div className="absolute inset-0 rounded-full bg-accent/20 scale-0 group-hover:scale-100 transition-transform duration-500 will-change-transform" />
           <span className="relative z-10 transition-transform duration-300 group-hover:scale-90">
-            {menuOpen ? <X size={22} strokeWidth={2.5} /> : <Menu size={22} strokeWidth={2.5} />}
+            {menuOpen ? (
+              <X size={22} strokeWidth={2.5} />
+            ) : (
+              <Menu size={22} strokeWidth={2.5} />
+            )}
           </span>
         </button>
       </div>
@@ -150,6 +160,7 @@ export default function Navbar() {
       {/* ── FULLSCREEN OVERLAY ── */}
       <div
         ref={menuRef}
+        // Initial state hides the menu using clip-path instead of off-screen translation
         className="
           fixed inset-0 z-[120]
           w-full h-[100dvh]
@@ -158,6 +169,7 @@ export default function Navbar() {
           will-change-transform overflow-hidden
           font-heading text-fg
         "
+        style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)' }}
       >
         {/* Atmospheric glows */}
         <div className="absolute inset-0 pointer-events-none">
@@ -166,48 +178,36 @@ export default function Navbar() {
         </div>
 
         {/* ── MAIN CONTENT AREA ── */}
-        <div className="
-          relative z-10 flex flex-col
-          flex-1 min-h-0
-          justify-center
-          px-6 sm:px-14 lg:px-28 xl:px-36
-          pt-20 pb-4
-          overflow-hidden
-        ">
-          {/* Eyebrow label */}
-          <span className="
-            block text-muted font-mono tracking-[0.4em] text-[10px] uppercase
-            mb-6 sm:mb-8 lg:mb-10 ml-1
-          ">
+        <div className="relative z-10 flex flex-col flex-1 min-h-0 justify-center px-6 sm:px-14 lg:px-28 xl:px-36 pt-20 pb-4 overflow-hidden">
+          <span className="menu-eyebrow block text-muted font-mono tracking-[0.4em] text-[10px] uppercase mb-6 sm:mb-8 lg:mb-10 ml-1">
             Navigation
           </span>
 
-          {/* Nav links */}
           <nav
-            className="flex flex-col gap-0"
+            className="flex flex-col gap-1 sm:gap-2"
             aria-label="Main navigation"
           >
-            {navLinks.map((link) => (
+            {NAV_LINKS.map(link => (
               <div
                 key={link.path}
-                className="overflow-hidden perspective-[1200px] menu-link-wrapper"
-                style={{ paddingBlock: 'clamp(1px, 0.3vw, 6px)' }}
+                // overflow-hidden is crucial here to mask the text as it slides up
+                className="overflow-hidden"
               >
                 <NavLink
                   to={link.path}
+                  onClick={e => handleNavigation(e, link.path)}
+                  onMouseEnter={e => handleLinkHover(e, true)}
+                  onMouseLeave={e => handleLinkHover(e, false)}
                   className={({ isActive }) =>
-                    `menu-link block w-fit font-heading font-black uppercase leading-[0.85] tracking-tighter select-none ${
-                      isActive ? 'text-accent' : 'text-fg'
-                    }`
+                    `menu-link block w-fit cursor-pointer ${isActive ? 'text-accent' : 'text-fg'}`
                   }
-                  style={{
-                    fontSize: 'clamp(2rem, 7.5vw, 6.5rem)',
-                  }}
-                  onClick={(e) => handleNavigation(e, link.path)}
-                  onMouseEnter={(e) => handleLinkHover(e, true)}
-                  onMouseLeave={(e) => handleLinkHover(e, false)}
                 >
-                  {link.label}
+                  <div
+                    className="menu-link-inner font-heading font-black uppercase leading-[0.85] tracking-tighter select-none origin-left"
+                    style={{ fontSize: 'clamp(2.5rem, 8vw, 7rem)' }}
+                  >
+                    {link.label}
+                  </div>
                 </NavLink>
               </div>
             ))}
@@ -215,39 +215,21 @@ export default function Navbar() {
         </div>
 
         {/* ── FOOTER ── */}
-        <div className="
-          menu-footer
-          relative z-10
-          flex flex-wrap items-center justify-between gap-4
-          px-6 sm:px-14 lg:px-28 xl:px-36
-          pb-6 sm:pb-8
-          border-t border-white/5
-          pt-4
-        ">
-          {/* Social links */}
+        <div className="menu-footer relative z-10 flex flex-wrap items-center justify-between gap-4 px-6 sm:px-14 lg:px-28 xl:px-36 pb-6 sm:pb-8 border-t border-white/5 pt-4">
           <div className="flex gap-5 sm:gap-7">
-            {[
-              { label: 'LinkedIn', href: 'https://www.linkedin.com/in/santosh-kumar-dash-417a30274/' },
-              { label: 'Github', href: 'https://github.com/santoshDEV04' },
-              { label: 'LeetCode', href: 'https://leetcode.com/u/Santosh_ku04/' }
-            ].map((social) => (
+            {SOCIAL_LINKS.map(social => (
               <a
                 key={social.label}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="
-                  font-mono text-[9px] sm:text-[10px] text-muted uppercase tracking-widest
-                  hover:text-accent hover:-translate-y-0.5
-                  transition-all duration-300
-                "
+                className="font-mono text-[9px] sm:text-[10px] text-muted uppercase tracking-widest hover:text-accent hover:-translate-y-0.5 transition-all duration-300"
               >
                 {social.label}
               </a>
             ))}
           </div>
 
-          {/* Current year / tagline */}
           <span className="font-mono text-[9px] sm:text-[10px] text-muted/40 uppercase tracking-widest">
             © {new Date().getFullYear()}
           </span>
