@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { useTransition, PAGE_NAMES } from '../context/TransitionContext';
+import { useSound } from '../context/SoundContext';
+import { useEffect } from 'react';
 
 // ─── Timing & Easing ───────────────────────────────────────────────────────
 const T_DURATION = 0.8;
@@ -9,9 +11,12 @@ const EASE = [0.76, 0, 0.24, 1];
 export default function PageTransition({ children }) {
   const location = useLocation();
   const { pendingLabel } = useTransition();
+  const { playSound } = useSound();
   
   // Prefer the pending label (target) over the current pathname (source)
   const label = pendingLabel || PAGE_NAMES[location.pathname] || 'SANTOSH';
+
+  // Sound removed per user request
 
   return (
     <>
@@ -24,9 +29,9 @@ export default function PageTransition({ children }) {
         transition={{ duration: T_DURATION, ease: EASE }}
       />
 
-      {/* ── Diagonal Overlay 2 (White) ── */}
+      {/* ── Diagonal Overlay 2 (Foreground matched) ── */}
       <motion.div
-        className="fixed inset-0 z-[9992] bg-white pointer-events-none"
+        className="fixed inset-0 z-[9992] bg-fg pointer-events-none"
         initial={{ skewY: 12, y: "0%" }}
         animate={{ y: "-160%", skewY: 12 }}
         exit={{ y: "0%", skewY: 12 }}
@@ -49,9 +54,9 @@ export default function PageTransition({ children }) {
       {/* ── Page Content ── */}
       <motion.div
         className="w-full min-h-[100dvh]"
-        initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
-        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-        exit={{ opacity: 0, scale: 1.02, filter: "blur(10px)" }}
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 1.02 }}
         transition={{ duration: 0.5, delay: 0.1, ease: EASE }}
       >
         {children}

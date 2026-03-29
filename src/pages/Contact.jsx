@@ -4,6 +4,7 @@ import PageTransition from '../components/PageTransition';
 import MagneticButton from '../components/MagneticButton';
 import TrueFocus from '../components/TrueFocus';
 import { Mail } from 'lucide-react';
+import { useSound } from '../context/SoundContext';
 import Footer from '../components/Footer';
 
 const Github = ({ size, className }) => (<svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>);
@@ -12,6 +13,7 @@ const Twitter = ({ size, className }) => (<svg width={size} height={size} classN
 
 export default function Contact() {
   const [status, setStatus] = useState('idle');
+  const { playSound } = useSound();
 
   useEffect(() => {
     let ctx = gsap.context(() => {
@@ -30,6 +32,7 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    playSound('messageSent', 1.0);
     setStatus('success');
     
     setTimeout(() => {
@@ -114,10 +117,10 @@ export default function Contact() {
               ), href: 'https://leetcode.com/u/Santosh_ku04/' },
               { name: 'Email', icon: Mail, href: 'mailto:dashsantosh1333@gmail.com' }
             ].map(social => (
-              <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 text-xl font-heading font-medium hover:text-white transition-colors w-max relative overflow-hidden pb-1 cursor-none">
-                <social.icon size={20} className="text-muted group-hover:text-white transition-colors" />
+              <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 text-xl font-heading font-medium hover:text-fg transition-colors w-max relative overflow-hidden pb-1 cursor-none">
+                <social.icon size={20} className="text-muted group-hover:text-fg transition-colors" />
                 {social.name}
-                <span className="absolute bottom-0 left-0 w-full h-[1px] bg-white -translate-x-[101%] group-hover:translate-x-0 transition-transform duration-300 ease-out" />
+                <span className="absolute bottom-0 left-0 w-full h-[1px] bg-fg -translate-x-[101%] group-hover:translate-x-0 transition-transform duration-300 ease-out" />
               </a>
             ))}
 

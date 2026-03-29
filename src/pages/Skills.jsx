@@ -175,7 +175,7 @@ export default function Skills() {
             className="skills-heading font-heading font-black tracking-tighter leading-[0.82] overflow-hidden whitespace-nowrap"
             style={{
               fontSize: 'clamp(3.5rem, 13vw, 11rem)',
-              WebkitTextStroke: '1.5px rgba(255,255,255,0.85)',
+              WebkitTextStroke: '2px var(--fg)',
               color: 'transparent',
             }}
           >
@@ -219,7 +219,7 @@ export default function Skills() {
         </section>
 
         {/* ═══════════ SCROLLING LOGO STRIP ═══════════ */}
-        <section className="logo-strip opacity-0 relative w-screen left-1/2 -translate-x-1/2 bg-white/[0.025] border-y border-white/[0.07] py-14 sm:py-20 mt-12 sm:mt-16 flex flex-col gap-10 sm:gap-14 overflow-hidden">
+        <section className="logo-strip opacity-0 relative w-screen left-1/2 -translate-x-1/2 bg-fg/[0.025] border-y border-fg/[0.07] py-14 sm:py-20 mt-12 sm:mt-16 flex flex-col gap-10 sm:gap-14 overflow-hidden">
 
           {/* Edge fades */}
           <div className="absolute inset-y-0 left-0 w-24 sm:w-40 pointer-events-none z-10"
@@ -273,7 +273,7 @@ export default function Skills() {
             {categories.map(({ label, desc, skills }) => (
               <div
                 key={label}
-                className="cat-card opacity-0 group relative overflow-hidden border border-white/10 p-7 sm:p-9 bg-white/[0.02] hover:bg-white hover:text-black transition-all duration-500"
+                className="cat-card opacity-0 group relative overflow-hidden border border-fg/10 p-7 sm:p-9 bg-fg/[0.02] hover:bg-fg hover:text-bg transition-all duration-500"
               >
                 {/* Top accent line */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-black/20 transition-colors duration-500" />
@@ -300,7 +300,7 @@ export default function Skills() {
                         </span>
                       </div>
                       {/* Track */}
-                      <div className="w-full h-px bg-white/10 group-hover:bg-black/10 overflow-visible relative transition-colors duration-300">
+                      <div className="w-full h-px bg-fg/10 group-hover:bg-bg/10 overflow-visible relative transition-colors duration-300">
                         {/* Fill */}
                         <div
                           className="progress-bar absolute top-0 left-0 h-full origin-left"

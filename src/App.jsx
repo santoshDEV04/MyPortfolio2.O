@@ -9,6 +9,7 @@ import ScrollProgress from './components/ScrollProgress';
 import NoiseOverlay from './components/NoiseOverlay';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { TransitionProvider } from './context/TransitionContext';
+import { SoundProvider } from './context/SoundContext';
 
 import Home from './pages/Home';
 import About from './pages/About';
@@ -21,27 +22,29 @@ export default function App() {
   useSmoothScroll();
 
   return (
-    <TransitionProvider>
-      <Loader />
-      <CustomCursor />
-      <InteractiveGrid />
-      <ScrollProgress />
-      <NoiseOverlay />
-      <Navbar />
+    <SoundProvider>
+      <TransitionProvider>
+        <Loader />
+        <CustomCursor />
+        <InteractiveGrid />
+        <ScrollProgress />
+        <NoiseOverlay />
+        <Navbar />
 
-      <main className="relative z-10 min-h-screen">
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/skills" element={<Skills />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </AnimatePresence>
-      </main>
+        <main className="relative z-10 min-h-screen">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/skills" element={<Skills />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </AnimatePresence>
+        </main>
 {/* 
-      {location.pathname !== '/contact' && <Footer />} */}
-    </TransitionProvider>
+        {location.pathname !== '/contact' && <Footer />} */}
+      </TransitionProvider>
+    </SoundProvider>
   );
 }

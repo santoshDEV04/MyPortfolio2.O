@@ -20,6 +20,7 @@ import MagneticButton from '../components/MagneticButton';
 import PageTransition from '../components/PageTransition';
 import GhostText from '../components/GhostText';
 import { useLoader } from '../context/LoaderContext';
+import { useSound } from '../context/SoundContext';
 import Footer from '../components/Footer';
 
 gsap.registerPlugin(TextPlugin, ScrollTrigger);
@@ -63,6 +64,22 @@ const CSS = `
   --font-d:    'Syne', sans-serif;
   --font-m:    'JetBrains Mono', monospace;
 }
+
+:root[data-theme='light'] {
+  --bg:        #f4ebfa;
+  --bg2:       #eae0f4;
+  --surface:   rgba(0,0,0,0.035);
+  --border:    rgba(0,0,0,0.1);
+  --border-v:  rgba(147,51,234,0.4);
+  --fg:        #07060d;
+  --muted:     rgba(7,6,13,0.6);
+  --dim:       rgba(7,6,13,0.35);
+  --v:         #9333ea;
+  --vl:        #7e22ce;
+  --vll:       #6b21a8;
+  --vg:        rgba(147,51,234,0.15);
+}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--fg);font-family:var(--font-m);-webkit-font-smoothing:antialiased}
@@ -283,6 +300,7 @@ function SectionDivider() {
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function Home() {
   const { loaderDone } = useLoader();
+  const { playSound } = useSound();
   const roleRef = useRef(null);
   const [clock, setClock] = useState('');
 
@@ -470,6 +488,7 @@ export default function Home() {
                 <MagneticButton href="/#/projects">PROJECTS_LOG</MagneticButton>
                 <MagneticButton
                   onClick={() => {
+                    playSound('resumeDownload', 1.0);
                     const a = document.createElement('a');
                     a.href = '/resume.pdf';
                     a.download = 'Santosh_Resume.pdf';

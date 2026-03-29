@@ -12,6 +12,16 @@
   --accent: #a855f7;
   --font-heading: 'Syne', sans-serif;
   --font-body: 'Space Grotesk', sans-serif;
+  --inverted: 100%;
+}
+
+:root[data-theme='light'] {
+  --bg: #f4ebfa;       /* Very light background */
+  --fg: #05000a;       /* Dark text */
+  --muted: #645179;    /* Darkened muted for contrast */
+  --border: #d4c8e1;   /* Light border */
+  --accent: #9333ea;   /* Slightly darker violet for light mode contrast */
+  --inverted: 0%;
 }
 
 * { 
@@ -29,6 +39,7 @@ body {
   font-family: var(--font-body); 
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease-out, color 0.4s ease-out;
 }
 
 .font-cursive {

@@ -1,12 +1,14 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import gsap from 'gsap';
 import { useTransition, PAGE_NAMES } from '../context/TransitionContext';
+import { useSound } from '../context/SoundContext';
+import gsap from 'gsap';
 
 export default function MagneticButton({ children, href, onClick, className = "", style = "primary" }) {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
   const { setPendingLabel } = useTransition();
+  const { playSound } = useSound();
 
   useEffect(() => {
     const btn = buttonRef.current;
@@ -39,6 +41,7 @@ export default function MagneticButton({ children, href, onClick, className = ""
   }, []);
 
   const handleClick = (e) => {
+    playSound('click', 1.0);
     if (onClick) onClick(e);
     
     // If it's a link, handle the transition logic
@@ -72,6 +75,7 @@ export default function MagneticButton({ children, href, onClick, className = ""
     <Component 
       ref={buttonRef} 
       onClick={handleClick} 
+      onMouseEnter={() => playSound('hover2', 0.8)}
       className={`${baseStyles} ${styles[style] || styles.primary} ${className}`}
     >
       <span className="pointer-events-none relative z-10 block">{children}</span>

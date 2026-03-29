@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import gsap from 'gsap';
 import { useTransition, PAGE_NAMES } from '../context/TransitionContext';
+import { useTheme } from '../hooks/useTheme';
+import { useSound } from '../context/SoundContext';
 
 const NAV_LINKS = [
   { path: '/', label: 'Home' },
@@ -26,12 +28,15 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { setPendingLabel } = useTransition();
+  const { theme, toggleTheme } = useTheme();
+  const { playSound } = useSound();
 
   const menuRef = useRef(null);
   const tl = useRef(null);
 
   const handleNavigation = (e, path) => {
     e.preventDefault();
+    playSound('click', 1.0);
     if (path === location.pathname) {
       setMenuOpen(false);
       return;
@@ -101,6 +106,7 @@ export default function Navbar() {
   // Premium hover effect: Shift right, change color, dim siblings
   const handleLinkHover = (e, isEnter) => {
     if (isEnter) {
+      playSound('hover', 0.8);
       gsap.to(e.currentTarget, {
         x: 30,
         color: 'var(--accent)',
@@ -129,18 +135,38 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── HAMBURGER BUTTON ── */}
-      <div className="fixed top-6 right-6 sm:top-8 sm:right-8 z-[130]">
+      {/* ── HAMBURGER BUTTON & THEME TOGGLE ── */}
+      <div className="fixed top-6 right-6 sm:top-8 sm:right-8 z-[130] flex items-center gap-3">
         <button
-          onClick={() => setMenuOpen(prev => !prev)}
+          onClick={() => { playSound('click', 1.0); toggleTheme(); }}
+          aria-label="Toggle theme"
+          className="
+            relative flex items-center justify-center
+            w-11 h-11 sm:w-12 sm:h-12
+            rounded-full
+            bg-fg/10 border border-fg/20 backdrop-blur-md
+            text-fg hover:bg-fg hover:text-bg
+            transition-colors duration-500
+            overflow-hidden group
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
+          "
+        >
+          <div className="absolute inset-0 rounded-full bg-accent/20 scale-0 group-hover:scale-100 transition-transform duration-500 will-change-transform" />
+          <span className="relative z-10 transition-transform duration-300 group-hover:scale-90">
+            {theme === 'dark' ? <Sun size={20} strokeWidth={2.5} /> : <Moon size={20} strokeWidth={2.5} />}
+          </span>
+        </button>
+        
+        <button
+          onClick={() => { playSound('click', 1.0); setMenuOpen(prev => !prev); }}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           className="
             relative flex items-center justify-center
             w-12 h-12 sm:w-14 sm:h-14
             rounded-full
-            bg-black/40 border border-white/10 backdrop-blur-md
-            text-white hover:bg-white hover:text-black
+            bg-fg/10 border border-fg/20 backdrop-blur-md
+            text-fg hover:bg-fg hover:text-bg
             transition-colors duration-500
             overflow-hidden group
             focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
@@ -215,7 +241,7 @@ export default function Navbar() {
         </div>
 
         {/* ── FOOTER ── */}
-        <div className="menu-footer relative z-10 flex flex-wrap items-center justify-between gap-4 px-6 sm:px-14 lg:px-28 xl:px-36 pb-6 sm:pb-8 border-t border-white/5 pt-4">
+        <div className="menu-footer relative z-10 flex flex-wrap items-center justify-between gap-4 px-6 sm:px-14 lg:px-28 xl:px-36 pb-6 sm:pb-8 border-t border-fg/10 pt-4">
           <div className="flex gap-5 sm:gap-7">
             {SOCIAL_LINKS.map(social => (
               <a

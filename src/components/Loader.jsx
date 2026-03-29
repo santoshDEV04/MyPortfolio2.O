@@ -1,6 +1,7 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { useLoader } from '../context/LoaderContext';
+import { useSound } from '../context/SoundContext';
 
 const TEXTS = [
   'INITIALIZING SYSTEM',
@@ -10,133 +11,73 @@ const TEXTS = [
   'READY',
 ];
 
-// ── Wipe constants ──────────────────────────────────────────────
-const SKEW   = 300;   // horizontal shear (controls diagonal angle)
-const BAND_W = 280;   // screen-x width of the feathered wipe band
-const FEATHER = 120;  // soft-edge zone on each side of the band
-const SLICES  = 80;   // rasterisation slices (higher = smoother)
-const MAX_ALPHA = 0.88;
-
-function drawWipe(ctx, W, H, progress) {
-  ctx.clearRect(0, 0, W, H);
-
-  // Ease: easeInOutQuad on the progress
-  const p = progress;
-  const eased = p < 0.5
-    ? 2 * p * p
-    : 1 - Math.pow(-2 * p + 2, 2) / 2;
-
-  // Center of the wipe band in screen-x
-  const cx = -BAND_W / 2 - SKEW + eased * (W + BAND_W + SKEW * 2 + SKEW);
-
-  const sliceW = BAND_W / SLICES + 1;
-  const featherT = FEATHER / BAND_W;
-
-  for (let s = 0; s < SLICES; s++) {
-    const t       = s / SLICES;
-    const screenX = cx - BAND_W / 2 + t * BAND_W;
-
-    // Raised-cosine alpha envelope
-    let alpha;
-    if (t < featherT) {
-      alpha = t / featherT;
-    } else if (t > 1 - featherT) {
-      alpha = (1 - t) / featherT;
-    } else {
-      alpha = 1;
-    }
-    // smoothstep + clamp
-    alpha = alpha * alpha * (3 - 2 * alpha) * MAX_ALPHA;
-
-    ctx.beginPath();
-    ctx.moveTo(screenX,              0);
-    ctx.lineTo(screenX + sliceW,     0);
-    ctx.lineTo(screenX + sliceW + SKEW, H);
-    ctx.lineTo(screenX + SKEW,       H);
-    ctx.closePath();
-    ctx.fillStyle = `rgba(255,255,255,${alpha.toFixed(3)})`;
-    ctx.fill();
-  }
-}
-
 export default function Loader() {
   const containerRef = useRef(null);
-  const canvasRef    = useRef(null);
   const barFillRef   = useRef(null);
+  const countRef     = useRef(null);
+  const textRef      = useRef(null);
 
   const { loaderDone, setLoaderDone } = useLoader();
   const [mounted, setMounted]         = useState(true);
-  const [textIdx, setTextIdx]         = useState(0);
-  const [count, setCount]             = useState(0);
-
-  // Keep canvas sized to viewport
-  const resizeCanvas = useCallback(() => {
-    const c = canvasRef.current;
-    if (!c) return;
-    c.width  = window.innerWidth;
-    c.height = window.innerHeight;
-  }, []);
+  const { playSound }                 = useSound();
 
   useEffect(() => {
     if (loaderDone) return;
 
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    playSound('loading', 1.0);
 
-    const canvas   = canvasRef.current;
-    const ctx      = canvas.getContext('2d');
     const TOTAL_MS = 3200;
-    const start    = performance.now();
-    let raf;
-    let lastIdx    = -1;
+    const progressObject = { value: 0 };
 
-    const frame = (now) => {
-      const p  = Math.min((now - start) / TOTAL_MS, 1);
-      const v  = Math.round(p * 100);
-
-      // Draw wipe
-      drawWipe(ctx, canvas.width, canvas.height, p);
-
-      // Counter + bar
-      setCount(v);
-      const idx = p < 0.20 ? 0 : p < 0.45 ? 1 : p < 0.65 ? 2 : p < 0.85 ? 3 : 4;
-      if (idx !== lastIdx) { setTextIdx(idx); lastIdx = idx; }
-
-      if (p < 1) {
-        raf = requestAnimationFrame(frame);
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        setCount(100);
-        setTextIdx(4);
-
-        // Exit: slide loader up
+    const tl = gsap.timeline({
+      onComplete: () => {
         gsap.to(containerRef.current, {
-          yPercent  : -100,
-          duration  : 0.9,
-          ease      : 'power4.inOut',
-          delay     : 0.5,
-          onComplete: () => { setLoaderDone(true); setMounted(false); },
+          yPercent: -100,
+          duration: 0.9,
+          ease: 'power4.inOut',
+          delay: 0.5,
+          onComplete: () => {
+            setLoaderDone(true);
+            setMounted(false);
+          },
         });
       }
-    };
+    });
 
-    raf = requestAnimationFrame(frame);
+    tl.to(progressObject, {
+      value: 100,
+      duration: TOTAL_MS / 1000,
+      ease: 'power1.inOut',
+      onUpdate: () => {
+        const val = Math.round(progressObject.value);
+        if (countRef.current) {
+          countRef.current.textContent = String(val).padStart(2, '0');
+        }
+        
+        // Update text based on progress safely
+        const p = val / 100;
+        const idx = p < 0.20 ? 0 : p < 0.45 ? 1 : p < 0.65 ? 2 : p < 0.85 ? 3 : 4;
+        if (textRef.current && textRef.current.innerText !== TEXTS[idx]) {
+          textRef.current.innerText = TEXTS[idx];
+          // re-trigger animation hack
+          textRef.current.style.animation = 'none';
+          void textRef.current.offsetWidth;
+          textRef.current.style.animation = 'fadeSlideUp 0.25s ease forwards';
+        }
+      }
+    }, 0);
 
-    // Progress bar via gsap (independent, stays accurate)
-    const barCtx = gsap.context(() => {
-      gsap.fromTo(
-        barFillRef.current,
-        { scaleX: 0 },
-        { scaleX: 1, duration: TOTAL_MS / 1000, ease: 'power1.inOut', transformOrigin: 'left' },
-      );
-    }, containerRef);
+    tl.fromTo(
+      barFillRef.current,
+      { scaleX: 0 },
+      { scaleX: 1, duration: TOTAL_MS / 1000, ease: 'power1.inOut', transformOrigin: 'left' },
+      0
+    );
 
     return () => {
-      cancelAnimationFrame(raf);
-      barCtx.revert();
-      window.removeEventListener('resize', resizeCanvas);
+      tl.kill();
     };
-  }, [loaderDone, setLoaderDone, resizeCanvas]);
+  }, [loaderDone, setLoaderDone, playSound]);
 
   if (!mounted && loaderDone) return null;
 
@@ -150,7 +91,7 @@ export default function Loader() {
     >
       {/* Subtle grid */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-50"
         style={{
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
@@ -158,13 +99,6 @@ export default function Loader() {
           `,
           backgroundSize: '56px 56px',
         }}
-      />
-
-      {/* Canvas — diagonal wipe lives here */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-[2] pointer-events-none"
-        style={{ width: '100%', height: '100%' }}
       />
 
       {/* Scan line */}
@@ -186,7 +120,7 @@ export default function Loader() {
         <div key={i} className={`absolute w-6 h-6 z-10 border-white/25 ${cls}`} style={{ borderWidth: 1.5 }} />
       ))}
 
-      {/* Giant counter — mix-blend-mode:difference so wipe punches through it */}
+      {/* Giant counter */}
       <div
         className="relative z-[5] select-none text-center"
         style={{
@@ -195,10 +129,9 @@ export default function Loader() {
           fontWeight   : 900,
           letterSpacing: '-0.06em',
           lineHeight   : 0.9,
-          mixBlendMode : 'difference',
         }}
       >
-        {String(count).padStart(2, '0')}
+        <span ref={countRef}>00</span>
         <span style={{ fontSize: '0.28em', verticalAlign: 'super', letterSpacing: 0, opacity: 0.5 }}>%</span>
       </div>
 
@@ -219,7 +152,7 @@ export default function Loader() {
 
       {/* Status text */}
       <div
-        key={textIdx}
+        ref={textRef}
         className="relative z-[5] uppercase mt-7"
         style={{
           fontFamily   : "'Space Mono', monospace",
@@ -229,7 +162,7 @@ export default function Loader() {
           animation    : 'fadeSlideUp 0.25s ease forwards',
         }}
       >
-        {TEXTS[textIdx]}
+        {TEXTS[0]}
       </div>
 
       {/* Version */}

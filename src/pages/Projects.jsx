@@ -66,8 +66,8 @@ function ProjectCard({ project, index }) {
   return (
     <div
       ref={cardRef}
-      className="project-card group relative flex flex-col overflow-hidden border border-white/10 bg-white/[0.02] will-change-transform cursor-none"
-      style={{ borderRadius: 2 }}
+      className="project-card group relative flex flex-col overflow-hidden border border-fg/10 bg-fg/[0.02] will-change-transform cursor-none"
+      style={{ borderRadius: 2, transformStyle: 'preserve-3d' }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -83,7 +83,7 @@ function ProjectCard({ project, index }) {
 
         {/* Number badge */}
         <span
-          className="absolute top-4 left-4 font-mono text-xs text-white/40 font-bold tracking-widest"
+          className="absolute top-4 left-4 font-mono text-xs text-fg/40 font-bold tracking-widest"
         >
           {project.id}
         </span>
@@ -117,7 +117,7 @@ function ProjectCard({ project, index }) {
           {project.stack.map(tech => (
             <span
               key={tech}
-              className="text-[10px] sm:text-xs font-mono px-2 sm:px-3 py-1 border border-white/10 text-white/50 rounded-sm"
+              className="text-[10px] sm:text-xs font-mono px-2 sm:px-3 py-1 border border-fg/10 text-fg/50 rounded-sm"
             >
               {tech}
             </span>
@@ -125,7 +125,7 @@ function ProjectCard({ project, index }) {
         </div>
 
         {/* Links */}
-        <div className="flex items-center gap-4 pt-3 mt-auto border-t border-white/8">
+        <div className="flex items-center gap-4 pt-3 mt-auto border-t border-fg/10">
           <a
             href={project.demo}
             target="_blank"
@@ -137,7 +137,7 @@ function ProjectCard({ project, index }) {
             <span className="absolute bottom-0 left-0 w-0 h-px bg-vl group-hover/link:w-full transition-all duration-300" />
           </a>
 
-          <div className="w-px h-4 bg-white/10" />
+          <div className="w-px h-4 bg-fg/10" />
 
           <a
             href={project.github}
@@ -205,13 +205,13 @@ export default function Projects() {
         </span>
         <h1
           className="projects-heading font-heading font-extrabold tracking-tighter text-transparent leading-none mb-8 sm:mb-14 opacity-0"
-          style={{ WebkitTextStroke: '2px white', fontSize: 'clamp(3.5rem, 18vw, 200px)' }}
+          style={{ WebkitTextStroke: '2px var(--fg)', fontSize: 'clamp(3.5rem, 18vw, 200px)' }}
         >
           WORK
         </h1>
 
         {/* ── Filter Tabs ── */}
-        <div className="flex flex-wrap gap-3 sm:gap-6 mb-10 sm:mb-14 border-b border-white/8 pb-5">
+        <div className="flex flex-wrap gap-3 sm:gap-6 mb-10 sm:mb-14 border-b border-fg/10 pb-5">
           {CATEGORIES.map(tab => (
             <button
               key={tab}
@@ -241,9 +241,9 @@ export default function Projects() {
         {/* ── Footer CTA ── */}
         <div className="mt-20 sm:mt-28 flex flex-col items-center gap-4 text-center">
           <div className="flex items-center gap-4">
-            <div className="h-px w-12 bg-white/10" />
+            <div className="h-px w-12 bg-fg/10" />
             <span className="font-mono text-[10px] tracking-[0.4em] text-muted uppercase">More on GitHub</span>
-            <div className="h-px w-12 bg-white/10" />
+            <div className="h-px w-12 bg-fg/10" />
           </div>
           <a
             href="https://github.com/santoshDEV04"

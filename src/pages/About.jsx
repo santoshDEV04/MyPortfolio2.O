@@ -73,7 +73,7 @@ export default function About() {
             ref={headingRef}
             className="font-heading font-extrabold tracking-tighter text-transparent leading-none mb-12 select-none w-fit"
             style={{
-              WebkitTextStroke: '1.5px rgba(255,255,255,0.85)',
+              WebkitTextStroke: '2px var(--fg)',
               fontSize: 'clamp(3.5rem, 20vw, 200px)',
               opacity: 0,
             }}
