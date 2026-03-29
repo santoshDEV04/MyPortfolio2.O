@@ -5,22 +5,38 @@
 @tailwind utilities;
 
 :root {
-  --bg: #05000a;
-  --fg: #f4ebfa;
-  --muted: #8b799e;
-  --border: #211530;
-  --accent: #a855f7;
+  --bg:        #07060d;
+  --bg2:       #0d0b18;
+  --surface:   rgba(255,255,255,0.035);
+  --border:    rgba(255,255,255,0.15);
+  --border-v:  rgba(147,51,234,0.32);
+  --fg:        #f4f0ff;
+  --muted:     rgba(244,240,255,0.6);
+  --dim:       rgba(244,240,255,0.25);
+  --v:         #9333ea;
+  --vl:        #a855f7;
+  --vll:       #c084fc;
+  --vg:        rgba(147,51,234,0.12);
+  --accent:    #a855f7;
   --font-heading: 'Syne', sans-serif;
   --font-body: 'Space Grotesk', sans-serif;
   --inverted: 100%;
 }
 
 :root[data-theme='light'] {
-  --bg: #f4ebfa;       /* Very light background */
-  --fg: #05000a;       /* Dark text */
-  --muted: #645179;    /* Darkened muted for contrast */
-  --border: #d4c8e1;   /* Light border */
-  --accent: #9333ea;   /* Slightly darker violet for light mode contrast */
+  --bg:        #f4ebfa;
+  --bg2:       #eae0f4;
+  --surface:   rgba(0,0,0,0.045);
+  --border:    #b6a1cf;
+  --border-v:  rgba(147,51,234,0.4);
+  --fg:        #07060d;
+  --muted:     rgba(7,6,13,0.7);
+  --dim:       rgba(7,6,13,0.45);
+  --v:         #9333ea;
+  --vl:        #7e22ce;
+  --vll:       #6b21a8;
+  --vg:        rgba(147,51,234,0.15);
+  --accent:    #9333ea;
   --inverted: 0%;
 }
 

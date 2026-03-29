@@ -56,7 +56,7 @@ export default function Contact() {
 
   return (
     <PageTransition>
-      <section className="min-h-screen pt-24 sm:pt-32 pb-24 px-5 sm:px-8 md:px-16 max-w-7xl mx-auto w-full flex flex-col justify-center">
+      <section className="min-h-[100dvh] pt-24 sm:pt-32 pb-24 px-5 sm:px-8 md:px-16 max-w-7xl mx-auto w-full flex flex-col justify-center">
         <div className="mb-8 sm:mb-12 w-full flex justify-start word-reveal will-change-transform">
           <TrueFocus 
             sentence="LET'S BUILD SOMETHING."

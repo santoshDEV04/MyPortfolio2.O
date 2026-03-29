@@ -4,10 +4,16 @@ const SoundContext = createContext();
 
 export function SoundProvider({ children }) {
   const [isMuted, setIsMuted] = useState(false);
-  const audioRefs = useRef({});
+  const audioContextRef = useRef(null);
+  const buffersRef = useRef({});
 
-  // Initialize sounds
   useEffect(() => {
+    // Initialize Web Audio API AudioContext
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    
+    audioContextRef.current = new AudioContext();
+
     const soundFiles = {
       click: '/sounds/click.mp3',
       hover: '/sounds/hover.mp3',
@@ -18,36 +24,55 @@ export function SoundProvider({ children }) {
       whoosh: '/sounds/whoosh.mp3',
     };
 
-    Object.entries(soundFiles).forEach(([key, src]) => {
-      const audio = new Audio(src);
-      // Preload critical interaction sounds
-      if (['click', 'hover', 'hover2'].includes(key)) {
-        audio.preload = 'auto';
+    // Load and decode all sounds
+    Object.entries(soundFiles).forEach(async ([key, src]) => {
+      try {
+        const response = await fetch(src);
+        const arrayBuffer = await response.arrayBuffer();
+        
+        // Decode audio data using the context
+        const audioBuffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
+        buffersRef.current[key] = audioBuffer;
+      } catch (err) {
+        console.warn(`Failed to preload or decode sound '${key}':`, err);
       }
-      audioRefs.current[key] = audio;
     });
 
     // Cleanup
     return () => {
-      Object.values(audioRefs.current).forEach(audio => {
-        audio.pause();
-        audio.src = '';
-      });
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+      }
     };
   }, []);
 
-  const playSound = (soundName, volume = 0.5) => {
+  const playSound = (soundName, volume = 1.0) => {
     if (isMuted) return;
-    const audio = audioRefs.current[soundName];
-    if (audio) {
-      // Clone the node to allow overlapping identical sounds (e.g. rapid hover)
-      const clone = audio.cloneNode();
-      clone.volume = volume;
-      clone.play().catch(e => {
-        // Auto-play might be blocked until user interacts
-        // We gracefully ignore the error so it doesn't crash
-        console.warn('Audio play blocked:', e);
-      });
+    
+    const ctx = audioContextRef.current;
+    const buffer = buffersRef.current[soundName];
+    
+    if (ctx && buffer) {
+      try {
+        // Resume AudioContext if suspended (often happens before first user interaction)
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+        
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        
+        const gainNode = ctx.createGain();
+        // Master volume multiplier base to significantly increase website sound
+        const masterVolumeBump = 3.0;
+        gainNode.gain.value = volume * masterVolumeBump; 
+        
+        source.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        source.start(0);
+      } catch (e) {
+        console.warn('Audio play blocked or failed:', e);
+      }
     }
   };
 

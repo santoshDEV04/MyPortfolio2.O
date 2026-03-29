@@ -64,7 +64,7 @@ export default function About() {
   return (
     <PageTransition>
       <section
-        className="about-container relative min-h-screen pt-24 pb-24 px-5 sm:px-8 md:px-16 overflow-hidden w-full"
+        className="about-container relative min-h-[100dvh] pt-24 pb-24 px-5 sm:px-8 md:px-16 overflow-hidden w-full"
       >
         <div className="max-w-7xl mx-auto w-full">
 
@@ -108,7 +108,7 @@ export default function About() {
               <div className="h-[1px] bg-border h-line origin-left w-full my-2" />
 
               {/* Stats */}
-              <div className="stats-row flex flex-row gap-8 sm:gap-12 py-2">
+              <div className="stats-row flex flex-row flex-wrap justify-between sm:justify-start gap-6 sm:gap-12 py-2">
                 {[
                   { target: 3,  label: 'Years Exp.' },
                   { target: 20, label: 'Projects'   },

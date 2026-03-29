@@ -19,6 +19,7 @@ import { useEffect, useRef, useState } from 'react';
 import MagneticButton from '../components/MagneticButton';
 import PageTransition from '../components/PageTransition';
 import GhostText from '../components/GhostText';
+import EyeCursorSection from '../components/EyeCursorSection';
 import { useLoader } from '../context/LoaderContext';
 import { useSound } from '../context/SoundContext';
 import Footer from '../components/Footer';
@@ -30,7 +31,7 @@ const hackathons = [
   {
     id: 'TRITHON-2026',
     title: 'Trithon 2026',
-    desc: 'Secured 5th Runner Up position among 429 applicant teams and 50 finalists. Developed under intense 48-hour pressure.',
+    desc: 'Secured 5th Runner Up position among 429 applicant teams and 50 finalists. Developed under intense 24-hour pressure.',
     stack: ['Innovation', 'System Design', 'Rapid Prototyping'],
     badge: '5TH RUNNER UP',
   }
@@ -42,7 +43,7 @@ const plans = [
   { num: '03', title: 'Tech Blog',          tag: 'Q3 2026', desc: 'Documenting advanced frontend architectures, GSAP animation breakdowns, and engineering logs.', icon: '▣' },
 ];
 
-const roles = ['Software Developer', 'UI Engineer', 'Problem Solver', 'Code Architect'];
+const roles = ['Software Developer', 'UI Engineer', 'Code Architect', 'Web Developer'];
 
 // ─── Global CSS ──────────────────────────────────────────────────────────────
 const CSS = `
@@ -246,13 +247,13 @@ function Corners({ sz = 11, clr = 'rgba(168,85,247,0.45)' }) {
 function HackRow({ h, idx }) {
   const rowRef = useRef(null), barRef = useRef(null);
   return (
-    <div ref={rowRef} className="hack-item"
+    <div ref={rowRef} className="hack-item grid grid-cols-[2rem_1fr] sm:grid-cols-[2.5rem_1fr_auto] items-start sm:items-center gap-x-4 sm:gap-x-8 gap-y-4 px-4 sm:px-6 py-6 sm:py-7 relative border-b opacity-0 cursor-default"
       onMouseEnter={() => { gsap.to(rowRef.current, { backgroundColor:'rgba(147,51,234,0.05)', duration:.25 }); gsap.to(barRef.current, { scaleY:1, duration:.35, ease:'power2.out' }); }}
       onMouseLeave={() => { gsap.to(rowRef.current, { backgroundColor:'transparent', duration:.25 }); gsap.to(barRef.current, { scaleY:0, duration:.25, ease:'power2.in' }); }}
-      style={{ position:'relative', display:'grid', gridTemplateColumns:'2.5rem 1fr auto', gap:'1.5rem 2rem', alignItems:'center', padding:'1.75rem 1.5rem', borderBottom:'1px solid var(--border)', opacity:0, cursor:'default' }}
+      style={{ borderColor:'var(--border)' }}
     >
       <div ref={barRef} style={{ position:'absolute', left:0, top:0, bottom:0, width:2, background:'linear-gradient(180deg,var(--vl),var(--v))', transformOrigin:'top', transform:'scaleY(0)' }} />
-      <span style={{ fontFamily:'var(--font-m)', fontSize:'.6rem', color:'var(--dim)', letterSpacing:'.2em' }}>{String(idx+1).padStart(2,'0')}</span>
+      <span className="mt-1 sm:mt-0 font-mono text-[0.6rem] text-[var(--dim)] tracking-[0.2em]">{String(idx+1).padStart(2,'0')}</span>
       <div>
         <div style={{ display:'flex', alignItems:'center', gap:'.6rem', marginBottom:'.4rem', flexWrap:'wrap' }}>
           <h3 style={{ fontFamily:'var(--font-d)', fontWeight:700, fontSize:'clamp(.9rem,2vw,1.1rem)', color:'var(--fg)', letterSpacing:'.02em' }}>{h.title}</h3>
@@ -261,7 +262,7 @@ function HackRow({ h, idx }) {
         <p style={{ color:'var(--muted)', fontSize:'.82rem', lineHeight:1.7, marginBottom:'.6rem', maxWidth:'50ch' }}>{h.desc}</p>
         <div style={{ display:'flex', gap:'.4rem', flexWrap:'wrap' }}>{h.stack.map(s => <span key={s} className="stag">{s}</span>)}</div>
       </div>
-      <span style={{ color:'var(--dim)', fontSize:'1rem' }}>→</span>
+      <span className="hidden sm:inline-block" style={{ color:'var(--dim)', fontSize:'1rem' }}>→</span>
     </div>
   );
 }
@@ -311,6 +312,15 @@ export default function Home() {
   const { playSound } = useSound();
   const roleRef = useRef(null);
   const [clock, setClock] = useState('');
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  /* Device detection */
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   /* live clock */
   useEffect(() => {
@@ -324,14 +334,16 @@ export default function Home() {
   /* GSAP */
   useEffect(() => {
     if (!loaderDone) return;
+    
+    // Core hero animations run everywhere
     const ctx = gsap.context(() => {
-
       /* ── Hero ── */
       gsap.fromTo('.fade-up-hero',
         { y:65, opacity:0, filter:'blur(12px)' },
         { y:0, opacity:1, filter:'blur(0px)', duration:2.6, ease:'power3.out', delay:.15 }
       );
       gsap.fromTo('.hero-hud',   { opacity:0 }, { opacity:0.6, duration:.8, stagger:.06, delay:.4 });
+      gsap.fromTo('.hero-eye',   { opacity:0, scale: 0.9 }, { opacity:1, scale: 1, duration: 1, ease:'power3.out', delay:.4 });
       gsap.fromTo('.hero-eyebrow', { opacity:0, x:-15 }, { opacity:1, x:0, duration:.7, ease:'power3.out', delay:.45 });
       gsap.fromTo('.name-char',
         { yPercent:125, opacity:0, rotateX:-45 },
@@ -351,7 +363,12 @@ export default function Home() {
       gsap.fromTo('.hero-cta',     { opacity:0, y:14 }, { opacity:1, y:0, duration:.8, ease:'power3.out', delay:1.38 });
       gsap.fromTo('.scroll-indicator', { opacity:0 }, { opacity:1, duration:1.2, delay:2.3 });
       gsap.to('.scroll-indicator', { y:-7, duration:1.4, repeat:-1, yoyo:true, ease:'sine.inOut', delay:2.3 });
+    });
 
+    // Scroll trigger animations (heavy payload) only to run on Desktop
+    let mm = gsap.matchMedia();
+    
+    mm.add("(min-width: 768px)", () => {
       /* ── Reveal lines ── */
       gsap.utils.toArray('.reveal-line').forEach(el =>
         gsap.fromTo(el, { scaleX:0 }, { scaleX:1, duration:1.6, ease:'power3.inOut', scrollTrigger:{ trigger:el, start:'top 92%' } })
@@ -377,7 +394,21 @@ export default function Home() {
         scrollTrigger:{ trigger:'.plans-grid', start:'top 87%' }, transformOrigin:'50% 0',
       });
     });
-    return () => ctx.revert();
+
+    mm.add("(max-width: 767px)", () => {
+       // Force static visible state on mobile without heavy scroll triggers
+       gsap.set('.reveal-line', { scaleX: 1 });
+       gsap.set('.reveal-word', { opacity: 1, y: 0, filter: 'blur(0px)' });
+       gsap.set('.hack-eyebrow', { opacity: 1, x: 0 });
+       gsap.set('.hack-heading, .hack-sub', { opacity: 1, y: 0 });
+       gsap.set('.hack-item', { opacity: 1, x: 0 });
+       gsap.set('.plans-eyebrow, .plans-heading, .plan-card', { opacity: 1, y: 0, rotateX: 0 });
+    });
+
+    return () => {
+      ctx.revert();
+      mm.revert();
+    }
   }, [loaderDone]);
 
   /* ─────────────────── JSX ─────────────────── */
@@ -388,7 +419,7 @@ export default function Home() {
       <div className="bg-transparent" style={{ position:'relative', width:'100%', overflowX:'hidden'}}>
 
         {/* bg layers */}
-        <Particles />
+        {isDesktop && <Particles />}
         <div className="dot-grid" />
         <div className="scanlines" />
 
@@ -418,6 +449,15 @@ export default function Home() {
             background:'radial-gradient(ellipse,rgba(147,51,234,0.08) 0%,transparent 70%)',
             pointerEvents:'none', zIndex:0,
           }} />
+
+          {/* Watching Eyes at Top Center - only on desktop */}
+          {isDesktop && (
+            <div className="hero-eye" style={{
+              position:'absolute', top:'4.5rem', left:'50%', transform:'translateX(-50%)', zIndex: 10, opacity: 0
+            }}>
+              <EyeCursorSection />
+            </div>
+          )}
 
           {/* HUD elements */}
           <div className="hero-hud" style={{
@@ -452,10 +492,10 @@ export default function Home() {
               </div>
 
               {/* NAME with glitch */}
-              <h1 className="glitch" data-text="SANTOSH" style={{
+              <h1 className="glitch leading-[1.05]" data-text="SANTOSH" style={{
                 fontFamily:'var(--font-d)', fontWeight:800,
-                fontSize:'clamp(2.5rem, 8.5vw, 3.5rem)',
-                letterSpacing:'-0.035em', lineHeight:1.05,
+                fontSize:'clamp(2.1rem, 11vw, 3.5rem)',
+                letterSpacing:'-0.035em',
                 perspective:'1000px', color:'var(--fg)',
                 marginBottom: '0.5rem',
               }}>
@@ -519,7 +559,7 @@ export default function Home() {
             <div className="hero-image-side">
               <div className="fade-up-hero" style={{
                 position: 'relative',
-                width: 'min(460px, 34vw)',
+                width: isDesktop ? 'min(460px, 34vw)' : 'min(300px, 65vw)',
                 aspectRatio: '5/6',
                 zIndex: 1,
                 opacity: 0,

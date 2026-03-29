@@ -14,8 +14,8 @@ const allProjects = [
     stack: ['Node.js', 'Express.js', 'MongoDB', 'JWT', 'Cloudinary', 'Multer'],
     category: 'Backend',
     image: '/images/backendPR.png',
-    github: 'https://github.com/santoshDEV04',
-    demo: '#',
+    github: 'https://github.com/santoshDEV04/Stream-Hub',
+    // demo: '#',
   },
   {
     id: '02',
@@ -24,19 +24,39 @@ const allProjects = [
     stack: ['React', 'Node.js', 'WebSockets', 'MongoDB'],
     category: 'Fullstack',
     image: '/images/streamify.png',
-    github: 'https://github.com/santoshDEV04',
-    demo: '#',
+    github: 'https://github.com/santoshDEV04/streamify',
+    // demo: '#',
   },
   {
     id: '03',
-    title: 'Portfolio Website',
+    title: 'Old Portfolio Website',
+    desc: 'My Old personal portfolio built with cinematic GSAP animations, Framer Motion transitions, and a brutalist void-luxury aesthetic.',
+    stack: ['React', 'GSAP', 'Framer Motion', 'Tailwind'],
+    category: 'Frontend',
+    image: '/images/oldportfolio.png',
+    github: 'https://github.com/santoshDEV04/my-portfolio',
+    demo: 'https://santoshdash01.vercel.app',
+  },
+  {
+    id: '04',
+    title: 'Portfolio website',
     desc: 'My personal portfolio built with cinematic GSAP animations, Framer Motion transitions, and a brutalist void-luxury aesthetic.',
     stack: ['React', 'GSAP', 'Framer Motion', 'Tailwind'],
     category: 'Frontend',
     image: '/images/portfolio.png',
-    github: 'https://github.com/santoshDEV04',
-    demo: '#',
+    github: 'https://github.com/santoshDEV04/MyPortfolio2.O',
+    demo: 'https://santoshdash.vercel.app',
   },
+  {
+    id: '05',
+    title: 'RBAC System',
+    desc: 'A robust Role-Based Access Control (RBAC) system built with Node.js and MongoDB. Implements role hierarchy, permission management, and secure authentication to control access to resources based on user roles.',
+    stack: ['Node.js', 'Express.js', 'MongoDB', 'JWT', 'Cloudinary', 'Multer', 'react', 'tailwind'],
+    category: 'Fullstack',
+    image: '/images/rbac.png',
+    github: 'https://github.com/santoshDEV04/food-delivery',
+    demo: '#',
+  }
 ];
 
 const CATEGORIES = ['All', 'Frontend', 'Backend', 'Fullstack'];
@@ -66,8 +86,8 @@ function ProjectCard({ project, index }) {
   return (
     <div
       ref={cardRef}
-      className="project-card group relative flex flex-col overflow-hidden border border-fg/10 bg-fg/[0.02] will-change-transform cursor-none"
-      style={{ borderRadius: 2, transformStyle: 'preserve-3d' }}
+      className="project-card group relative flex flex-col overflow-hidden border border-[var(--border)] bg-[var(--surface)] will-change-transform cursor-none shadow-sm"
+      style={{ borderRadius: 2, transformStyle: 'preserve-3d', borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -117,7 +137,7 @@ function ProjectCard({ project, index }) {
           {project.stack.map(tech => (
             <span
               key={tech}
-              className="text-[10px] sm:text-xs font-mono px-2 sm:px-3 py-1 border border-fg/10 text-fg/50 rounded-sm"
+              className="text-[10px] sm:text-xs font-mono px-2 sm:px-3 py-1 border border-[var(--border)] text-[var(--muted)] rounded-sm"
             >
               {tech}
             </span>
@@ -125,7 +145,7 @@ function ProjectCard({ project, index }) {
         </div>
 
         {/* Links */}
-        <div className="flex items-center gap-4 pt-3 mt-auto border-t border-fg/10">
+        <div className="flex items-center gap-4 pt-3 mt-auto border-t border-[var(--border)]">
           <a
             href={project.demo}
             target="_blank"
@@ -137,7 +157,7 @@ function ProjectCard({ project, index }) {
             <span className="absolute bottom-0 left-0 w-0 h-px bg-vl group-hover/link:w-full transition-all duration-300" />
           </a>
 
-          <div className="w-px h-4 bg-fg/10" />
+          <div className="w-px h-4 bg-[var(--border)]" />
 
           <a
             href={project.github}
@@ -197,7 +217,7 @@ export default function Projects() {
 
   return (
     <PageTransition>
-      <section className="min-h-screen pt-24 sm:pt-32 pb-24 px-5 sm:px-8 md:px-16 w-full max-w-7xl mx-auto">
+      <section className="min-h-[100dvh] pt-24 sm:pt-32 pb-24 px-5 sm:px-8 md:px-16 w-full max-w-7xl mx-auto">
 
         {/* ── Heading ── */}
         <span className="projects-eyebrow block font-mono text-[10px] tracking-[0.5em] text-vl uppercase mb-4 opacity-0">
@@ -211,13 +231,13 @@ export default function Projects() {
         </h1>
 
         {/* ── Filter Tabs ── */}
-        <div className="flex flex-wrap gap-3 sm:gap-6 mb-10 sm:mb-14 border-b border-fg/10 pb-5">
+        <div className="flex flex-wrap gap-3 sm:gap-6 mb-10 sm:mb-14 border-b border-[var(--border)] pb-5">
           {CATEGORIES.map(tab => (
             <button
               key={tab}
               onClick={() => setFilter(tab)}
               className={`relative text-sm sm:text-base font-mono font-medium pb-2 tracking-widest uppercase transition-colors cursor-none ${
-                filter === tab ? 'text-fg' : 'text-muted hover:text-fg'
+                filter === tab ? 'text-fg border-b-[3px] border-[var(--vl)]' : 'text-[var(--muted)] hover:text-fg'
               }`}
             >
               {tab}

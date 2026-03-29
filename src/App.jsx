@@ -31,7 +31,7 @@ export default function App() {
         <NoiseOverlay />
         <Navbar />
 
-        <main className="relative z-10 min-h-screen">
+        <main className="relative z-10 min-h-[100dvh]">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Home />} />
