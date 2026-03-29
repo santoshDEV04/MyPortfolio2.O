@@ -191,7 +191,8 @@ function Particles() {
     const c = ref.current; if (!c) return;
     const ctx = c.getContext('2d');
     let raf, w, h;
-    const pts = Array.from({ length: 65 }, () => ({
+    // Reduced particle count from 65 to 45 for better performance
+    const pts = Array.from({ length: 45 }, () => ({
       x: Math.random() * 1920, y: Math.random() * 1080,
       vx: (Math.random() - .5) * .17, vy: (Math.random() - .5) * .17,
       r: Math.random() * 1.1 + .25, a: Math.random() * .38 + .05,
@@ -206,12 +207,19 @@ function Particles() {
         ctx.fillStyle = '#a855f7'; ctx.globalAlpha = p.a; ctx.fill();
       }
       ctx.globalAlpha = 1;
-      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
-        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
-        const d = Math.sqrt(dx*dx + dy*dy);
-        if (d < 105) {
-          ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.strokeStyle = '#9333ea'; ctx.globalAlpha = (1-d/105)*.08; ctx.lineWidth = .5; ctx.stroke();
+      
+      const MAX_DIST = 105;
+      const MAX_DIST_SQ = MAX_DIST * MAX_DIST;
+      
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+          const distSq = dx*dx + dy*dy;
+          if (distSq < MAX_DIST_SQ) {
+            const d = Math.sqrt(distSq);
+            ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = '#9333ea'; ctx.globalAlpha = (1-d/MAX_DIST)*.08; ctx.lineWidth = .5; ctx.stroke();
+          }
         }
       }
       ctx.globalAlpha = 1; raf = requestAnimationFrame(draw);
@@ -347,6 +355,12 @@ export default function Home() {
       /* ── Reveal lines ── */
       gsap.utils.toArray('.reveal-line').forEach(el =>
         gsap.fromTo(el, { scaleX:0 }, { scaleX:1, duration:1.6, ease:'power3.inOut', scrollTrigger:{ trigger:el, start:'top 92%' } })
+      );
+
+      /* ── Reveal Words ── */
+      gsap.fromTo('.reveal-word', 
+        { opacity: 0, y: 20, filter: 'blur(8px)' }, 
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, stagger: 0.05, ease: 'power3.out', scrollTrigger: { trigger: '.reveal-section', start: 'top 75%' } }
       );
 
       /* ── Hackathons ── */
@@ -565,6 +579,17 @@ export default function Home() {
           <div className="scroll-indicator" style={{ opacity:0, position:'absolute', bottom:'2rem', left: '50%', transform: 'translateX(-50%)', display:'flex', flexDirection:'column', alignItems:'center', gap:'.3rem', pointerEvents:'none', zIndex:10 }}>
             <span style={{ fontFamily:'var(--font-m)', fontSize:'.52rem', letterSpacing:'.4em', color:'var(--dim)', textTransform:'uppercase' }}>Explore</span>
             <span style={{ color:'var(--vl)', fontSize:'.8rem' }}>↓</span>
+          </div>
+        </section>
+
+        {/* ══════════════ SCROLL REVEAL TEXT ══════════════ */}
+        <section className="reveal-section" style={{ position: 'relative', zIndex: 2, padding: 'clamp(5rem, 10vw, 8rem) 0', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <div style={{ maxWidth: '900px', padding: '0 2rem', textAlign: 'center' }}>
+            <p className="reveal-text" style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', color: 'var(--fg)', lineHeight: 1.4, fontWeight: 500, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.3em', letterSpacing: '-0.02em' }}>
+              {"We shape our tools and, thereafter, our tools shape us. Building the invisible to make the impossible, inevitable.".split(" ").map((word, i) => (
+                <span key={i} className="reveal-word" style={{ display: 'inline-block', opacity: 0 }}>{word}</span>
+              ))}
+            </p>
           </div>
         </section>
 
