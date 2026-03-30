@@ -566,21 +566,21 @@ export default function Home() {
               }}>
 
                 {/* Image noise/grain overlay */}
-                <div style={{
+                {/* <div style={{
                   position: 'absolute', inset: 0, zIndex: 10, pointerEvents: 'none', opacity: 0.12, mixBlendMode: 'overlay',
                   backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
                   backgroundSize: '150px 150px',
-                }} />
+                }} /> */}
 
                 {/* Cyber Brackets / corners for image */}
-                <Corners sz={22} clr="var(--vl)" />
+                {/* <Corners sz={22} clr="var(--vl)" /> */}
 
                 {/* Masks for futuristic integration */}
-                <div style={{
+                {/* <div style={{
                   position: 'absolute', inset: 0,
                   background: 'linear-gradient(to right, var(--bg) 0%, transparent 15%, transparent 85%, var(--bg) 100%), linear-gradient(to bottom, transparent 70%, var(--bg) 100%)',
                   zIndex: 5,
-                }} />
+                }} /> */}
 
                 <img
                   src="/profile.png"
@@ -596,21 +596,21 @@ export default function Home() {
                 />
 
                 {/* Pulse Tech Scanline */}
-                <div style={{
+                {/* <div style={{
                   position: 'absolute', top: '15%', left: '-5%', width: '110%', height: '1px',
                   background: 'linear-gradient(90deg, transparent, var(--vll), transparent)',
                   boxShadow: '0 0 15px var(--vl)',
                   animation: 'scanning 4s ease-in-out infinite',
                   zIndex: 15,
-                }} />
-                <style>{`
+                }} /> */}
+                {/* <style>{`
                   @keyframes scanning {
                     0% { top: 15%; opacity: 0; }
                     10% { opacity: 1; }
                     90% { opacity: 1; }
                     100% { top: 85%; opacity: 0; }
                   }
-                `}</style>
+                `}</style> */}
               </div>
             </div>
           </div>
