@@ -236,7 +236,7 @@ export default function Skills() {
             hoverSpeed={0}
             scaleOnHover
             fadeOut
-            fadeOutColor="#05000a"
+            fadeOutColor="var(--bg)"
           />
           <LogoLoop
             logos={row2}
@@ -247,7 +247,7 @@ export default function Skills() {
             hoverSpeed={0}
             scaleOnHover
             fadeOut
-            fadeOutColor="#05000a"
+            fadeOutColor="var(--bg)"
           />
           <LogoLoop
             logos={row3}
@@ -258,7 +258,7 @@ export default function Skills() {
             hoverSpeed={0}
             scaleOnHover
             fadeOut
-            fadeOutColor="#05000a"
+            fadeOutColor="var(--bg)"
           />
         </section>
 
