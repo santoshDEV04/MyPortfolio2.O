@@ -192,10 +192,14 @@ function Particles() {
     const c = ref.current; if (!c) return;
     const ctx = c.getContext('2d');
     let raf, w, h;
+    let mx = -1000, my = -1000;
+    const handleMouse = (e) => { mx = e.clientX; my = e.clientY; };
+    window.addEventListener('mousemove', handleMouse);
     // Reduced particle count from 65 to 45 for better performance
     const pts = Array.from({ length: 45 }, () => ({
-      x: Math.random() * 1920, y: Math.random() * 1080,
+      x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
       vx: (Math.random() - .5) * .17, vy: (Math.random() - .5) * .17,
+      baseVx: (Math.random() - .5) * .17, baseVy: (Math.random() - .5) * .17,
       r: Math.random() * 1.1 + .25, a: Math.random() * .38 + .05,
     }));
     const resize = () => { w = c.width = window.innerWidth; h = c.height = window.innerHeight; };
@@ -203,6 +207,17 @@ function Particles() {
     const draw = () => {
       ctx.clearRect(0, 0, w, h);
       for (const p of pts) {
+        // Mouse repulsion physics
+        const dx = p.x - mx; const dy = p.y - my;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 150) { 
+           p.vx += (dx/dist) * 0.08; 
+           p.vy += (dy/dist) * 0.08; 
+        }
+        // Friction returning to base velocity
+        p.vx = p.vx * 0.95 + p.baseVx * 0.05;
+        p.vy = p.vy * 0.95 + p.baseVy * 0.05;
+
         p.x = (p.x + p.vx + w) % w; p.y = (p.y + p.vy + h) % h;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = '#a855f7'; ctx.globalAlpha = p.a; ctx.fill();
@@ -226,7 +241,7 @@ function Particles() {
       ctx.globalAlpha = 1; raf = requestAnimationFrame(draw);
     };
     draw();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); window.removeEventListener('mousemove', handleMouse); };
   }, []);
   return <canvas ref={ref} aria-hidden style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none', opacity:.55 }} />;
 }
@@ -484,11 +499,11 @@ export default function Home() {
               {/* Personal Greeting with wave.gif */}
               <div className="hero-eyebrow" style={{
                 opacity:0, display:'flex', alignItems:'center', gap:'.5rem',
-                fontFamily:'var(--font-m)', fontSize:'clamp(.9rem, 1.8vw, 1.15rem)',
-                letterSpacing:'.1em', color:'var(--fg)',
-                marginBottom:'0.6rem', fontWeight: 400
+                fontFamily:'var(--font-m)', fontSize:'clamp(.8rem, 1.3vw, 1rem)',
+                letterSpacing:'.2em', color:'var(--vl)',
+                marginBottom:'0.6rem', fontWeight: 600, textTransform: 'uppercase'
               }}>
-                hey <img src="/wave.gif" alt="👋" style={{ width:32, height:32 }} /> , I' m
+                // SYSTEM_ARCHITECT
               </div>
 
               {/* NAME with glitch */}
@@ -529,13 +544,14 @@ export default function Home() {
               </div>
 
               {/* tagline */}
-              <p className="hero-tagline" style={{
+              <h2 className="hero-tagline" style={{
                 opacity:0, marginTop:'2.2rem',
-                fontFamily:'var(--font-m)', fontSize:'clamp(.85rem,2vw,1rem)',
-                color:'var(--muted)', lineHeight:1.85, maxWidth:'42ch', letterSpacing:'.03em',
+                fontFamily:'var(--font-d)', fontSize:'clamp(1.2rem, 3vw, 2.2rem)',
+                color:'var(--fg)', lineHeight:1.3, maxWidth:'32ch', letterSpacing:'-0.02em', fontWeight:800
               }}>
-                Building exceptionally high-performance and cinematically interactive web experiences with a focus on brutalist minimalism.
-              </p>
+                Architecting the Void.<br/>
+                <span style={{ color:'var(--vl)' }}>Engineering the Inevitable.</span>
+              </h2>
 
               {/* CTAs */}
               <div className="hero-cta" style={{ opacity:0, marginTop:'2.8rem', display:'flex', flexWrap:'wrap', gap:'1.2rem' }}>

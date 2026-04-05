@@ -10,7 +10,7 @@ const allProjects = [
   {
     id: '01',
     title: 'StreamHub',
-    desc: 'Production-grade backend for video streaming. Handles uploads, processing, JWT auth, and cloud storage at scale.',
+    desc: 'Scaled scalable video processing capabilities and integrated secure, deeply-nested cloud storage architecture.',
     stack: ['Node.js', 'Express.js', 'MongoDB', 'JWT', 'Cloudinary', 'Multer'],
     category: 'Backend',
     image: '/images/backendPR.png',
@@ -20,7 +20,7 @@ const allProjects = [
   {
     id: '02',
     title: 'Streamify',
-    desc: 'Real-time video + chat application powered by WebSockets. Supports live rooms, instant messaging, and peer connections.',
+    desc: 'Engineered a highly persistent, low-latency WebSocket ecosystem bridging synchronous real-time room communication.',
     stack: ['React', 'Node.js', 'WebSockets', 'MongoDB'],
     category: 'Fullstack',
     image: '/images/streamify.png',
@@ -50,7 +50,7 @@ const allProjects = [
   {
     id: '05',
     title: 'RBAC System',
-    desc: 'A robust Role-Based Access Control (RBAC) system built with Node.js and MongoDB. Implements role hierarchy, permission management, and secure authentication to control access to resources based on user roles.',
+    desc: 'Designed a highly secure, modular Role-Based Access Control logic framework to tightly seal sensitive resource gateways.',
     stack: ['Node.js', 'Express.js', 'MongoDB', 'JWT', 'Cloudinary', 'Multer', 'react', 'tailwind'],
     category: 'Fullstack',
     image: '/images/rbac.png',
@@ -61,9 +61,9 @@ const allProjects = [
 
 const CATEGORIES = ['All', 'Frontend', 'Backend', 'Fullstack'];
 
-// ─── Project Card ─────────────────────────────────────────────────────────────
-function ProjectCard({ project, index }) {
+function ProjectCard({ project, index, isFeatured }) {
   const cardRef = useRef(null);
+  const tagsRef = useRef(null);
 
   const handleMouseMove = (e) => {
     if (window.matchMedia('(hover: none)').matches) return;
@@ -71,28 +71,40 @@ function ProjectCard({ project, index }) {
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
     gsap.to(cardRef.current, {
-      rotateY: (x / rect.width) * 10,
-      rotateX: -(y / rect.height) * 10,
+      rotateY: (x / rect.width) * 5,
+      rotateX: -(y / rect.height) * 5,
       transformPerspective: 1200,
       ease: 'power2.out',
       duration: 0.4,
     });
   };
 
+  const handleMouseEnter = () => {
+    gsap.to(tagsRef.current.children, {
+      y: 0, opacity: 1, stagger: 0.04, ease: 'power3.out', duration: 0.4
+    });
+  };
+
   const handleMouseLeave = () => {
     gsap.to(cardRef.current, { rotateY: 0, rotateX: 0, ease: 'power3.out', duration: 0.6 });
+    gsap.to(tagsRef.current.children, {
+      y: 10, opacity: 0, ease: 'power3.inOut', duration: 0.3
+    });
   };
 
   return (
     <div
       ref={cardRef}
-      className="project-card group relative flex flex-col overflow-hidden border border-[var(--border)] bg-[var(--surface)] will-change-transform cursor-none shadow-sm"
+      className={`project-card group relative flex flex-col overflow-hidden border border-[var(--border)] bg-[var(--surface)] will-change-transform cursor-none shadow-sm ${
+        isFeatured ? 'md:col-span-2 md:row-span-2' : 'col-span-1 row-span-1'
+      }`}
       style={{ borderRadius: 2, transformStyle: 'preserve-3d', borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}
       onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* Image */}
-      <div className="relative overflow-hidden" style={{ aspectRatio: '16/9' }}>
+      <div className={`relative overflow-hidden shrink-0 border-b border-[var(--border)] bg-[var(--bg2)] ${isFeatured ? 'h-56 sm:h-72 md:h-[55%]' : 'h-48 sm:h-52'}`}>
         <img
           src={project.image}
           alt={project.title}
@@ -133,11 +145,11 @@ function ProjectCard({ project, index }) {
         </p>
 
         {/* Stack chips */}
-        <div className="flex flex-wrap gap-2 mt-1">
+        <div className="flex flex-wrap gap-2 mt-1 relative h-6 sm:h-7" ref={tagsRef}>
           {project.stack.map(tech => (
             <span
               key={tech}
-              className="text-[10px] sm:text-xs font-mono px-2 sm:px-3 py-1 border border-[var(--border)] text-[var(--muted)] rounded-sm"
+              className="text-[10px] sm:text-xs font-mono px-2 sm:px-3 py-1 border border-[var(--border)] text-[var(--vll)] bg-[var(--vg)] rounded-sm opacity-0 translate-y-[10px]"
             >
               {tech}
             </span>
@@ -252,9 +264,9 @@ export default function Projects() {
         </div>
 
         {/* ── Project Grid ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[auto] lg:auto-rows-[420px] gap-5 sm:gap-7 grid-flow-row-dense">
           {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+            <ProjectCard key={project.id} project={project} index={i} isFeatured={i === 0 || i === 3} />
           ))}
         </div>
 

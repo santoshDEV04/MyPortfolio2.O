@@ -88,8 +88,8 @@ export default function About() {
             <div className="flex flex-col gap-6 sm:gap-8">
 
               <SectionReveal delay={0.2}>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold mb-3 text-fg">
-                  Hey there! 👋
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold mb-3 text-fg flex items-center">
+                  Hey there! <img src="/wave.gif" alt="👋" className="ml-3 w-8 sm:w-10 h-8 sm:h-10 inline-block -translate-y-1" />
                 </h2>
                 <p className="text-base sm:text-lg md:text-xl text-muted leading-relaxed mb-4 font-medium">
                   I'm <span className="text-vl">Santosh Kumar Dash</span>, a passionate Full Stack Developer
@@ -98,11 +98,13 @@ export default function About() {
               </SectionReveal>
 
               <SectionReveal delay={0.4}>
-                <p className="text-sm sm:text-base md:text-lg text-muted/80 leading-relaxed">
-                  I thrive on building clean, performant applications that transform complex ideas into
-                  seamless digital experiences. With a strong focus on efficiency, problem-solving, and
-                  user-centric design, I craft solutions that make an impact.
+                <p className="text-sm sm:text-base md:text-lg text-muted/80 leading-relaxed mb-6">
+                  I obsess over the micro-interactions. The 50ms transitions between states that users don't consciously see, but definitely feel. Great software isn't just written—it's directed.
                 </p>
+                <div className="bg-fg/[0.03] border border-fg/10 p-5 rounded-sm">
+                  <h4 className="text-xs font-mono tracking-widest text-vl mb-2 uppercase">Currently</h4>
+                  <p className="text-sm text-dim">Reading <i className="text-muted">Designing Data-Intensive Applications</i> and building an open-source, highly optimised state library.</p>
+                </div>
               </SectionReveal>
 
               <div className="h-[1px] bg-border h-line origin-left w-full my-2" />

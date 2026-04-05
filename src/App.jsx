@@ -11,11 +11,13 @@ import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { TransitionProvider } from './context/TransitionContext';
 import { SoundProvider } from './context/SoundContext';
 
-import Home from './pages/Home';
-import About from './pages/About';
-import Projects from './pages/Projects';
-import Skills from './pages/Skills';
-import Contact from './pages/Contact';
+import { lazy, Suspense } from 'react';
+
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Skills = lazy(() => import('./pages/Skills'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 export default function App() {
   const location = useLocation();
@@ -33,13 +35,15 @@ export default function App() {
 
         <main className="relative z-10 min-h-[100dvh]">
           <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/skills" element={<Skills />} />
-              <Route path="/contact" element={<Contact />} />
-            </Routes>
+            <Suspense fallback={null}>
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/skills" element={<Skills />} />
+                <Route path="/contact" element={<Contact />} />
+              </Routes>
+            </Suspense>
           </AnimatePresence>
         </main>
 {/* 

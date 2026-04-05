@@ -36,15 +36,19 @@ export default function Contact() {
     setStatus('success');
     
     setTimeout(() => {
+      gsap.to('.submit-btn-text', { opacity: 0, duration: 0.2 });
+      gsap.to('.submit-btn-bg', { borderRadius: '50%', width: '50px', duration: 0.3, ease: 'power3.inOut' });
       gsap.fromTo('.success-tick', 
         { strokeDasharray: 50, strokeDashoffset: 50 },
-        { strokeDashoffset: 0, duration: 0.6, ease: 'power2.out' }
+        { strokeDashoffset: 0, duration: 0.6, ease: 'power2.out', delay: 0.3 }
       );
     }, 100);
 
     setTimeout(() => {
       setStatus('idle');
       e.target.reset();
+      gsap.to('.submit-btn-bg', { borderRadius: '2px', width: '100%', duration: 0.3 });
+      gsap.to('.submit-btn-text', { opacity: 1, duration: 0.2, delay: 0.3 });
     }, 3000);
   };
 
@@ -69,9 +73,14 @@ export default function Contact() {
           />
         </div>
         
-        <p className="contact-elem text-base sm:text-xl md:text-2xl text-muted font-body mb-12 sm:mb-24 opacity-0 max-w-2xl">
-          Open to freelance, full-time, and collaboration
-        </p>
+        <div className="contact-elem text-base sm:text-xl md:text-2xl text-muted font-body mb-6 sm:mb-10 opacity-0 max-w-2xl">
+          Open to freelance, full-time, and collaboration.
+        </div>
+        
+        <div className="contact-elem opacity-0 mb-12 sm:mb-20 inline-flex items-center gap-3 bg-[var(--surface)] border border-[var(--border)] px-4 py-2 rounded-full w-fit">
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-xs font-mono uppercase tracking-widest text-[var(--muted)]">Response time: Usually within 2h</span>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 contact-elem opacity-0">
           <form className="lg:col-span-8 flex flex-col gap-12" onSubmit={handleSubmit}>
@@ -90,17 +99,18 @@ export default function Contact() {
               <label htmlFor="message" className={labelClasses}>Message</label>
             </div>
             
-            <div className="mt-8">
-              <MagneticButton>
-                {status === 'idle' ? 'Send Message' : (
-                  <span className="flex items-center gap-2">
-                    Sent
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <path className="success-tick" d="M20 6L9 17l-5-5" />
-                    </svg>
-                  </span>
-                )}
-              </MagneticButton>
+            <div className="mt-8 relative submit-btn-bg h-14 bg-[var(--surface)] border border-[var(--border)] flex justify-center items-center hover:bg-[var(--vg)] transition-colors cursor-pointer text-[var(--fg)]">
+              <button type="submit" className="absolute inset-0 w-full h-full z-10" />
+              <div className="submit-btn-text font-mono tracking-widest uppercase text-sm">
+                 Send Message
+              </div>
+              {status === 'success' && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--vl)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path className="success-tick" d="M20 6L9 17l-5-5" />
+                  </svg>
+                </div>
+              )}
             </div>
           </form>
 

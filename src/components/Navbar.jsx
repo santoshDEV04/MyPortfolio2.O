@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, Volume2, VolumeX } from 'lucide-react';
 import gsap from 'gsap';
 import { useTransition, PAGE_NAMES } from '../context/TransitionContext';
 import { useTheme } from '../hooks/useTheme';
@@ -29,7 +29,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { setPendingLabel } = useTransition();
   const { theme, toggleTheme } = useTheme();
-  const { playSound } = useSound();
+  const { playSound, isMuted, toggleMute: toggleGlobalMute } = useSound();
 
   const menuRef = useRef(null);
   const tl = useRef(null);
@@ -154,6 +154,26 @@ export default function Navbar() {
           <div className="absolute inset-0 rounded-full bg-accent/20 scale-0 group-hover:scale-100 transition-transform duration-500 will-change-transform" />
           <span className="relative z-10 transition-transform duration-300 group-hover:scale-90">
             {theme === 'dark' ? <Sun size={20} strokeWidth={2.5} /> : <Moon size={20} strokeWidth={2.5} />}
+          </span>
+        </button>
+
+        <button
+          onClick={() => { playSound('click', 1.0); toggleGlobalMute(); }}
+          aria-label="Toggle sound"
+          className="
+            relative flex items-center justify-center
+            w-11 h-11 sm:w-12 sm:h-12
+            rounded-full
+            bg-fg/10 border border-fg/20 backdrop-blur-md
+            text-fg hover:bg-fg hover:text-bg
+            transition-colors duration-500
+            overflow-hidden group
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
+          "
+        >
+          <div className="absolute inset-0 rounded-full bg-accent/20 scale-0 group-hover:scale-100 transition-transform duration-500 will-change-transform" />
+          <span className="relative z-10 transition-transform duration-300 group-hover:scale-90">
+            {isMuted ? <VolumeX size={20} strokeWidth={2.5} /> : <Volume2 size={20} strokeWidth={2.5} />}
           </span>
         </button>
         

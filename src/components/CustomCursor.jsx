@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useCursor } from '../hooks/useCursor';
 
@@ -7,14 +7,22 @@ export default function CustomCursor() {
   const ringRef = useRef(null);
   const ring2Ref = useRef(null);
   const glowRef = useRef(null);
+  const canvasRef = useRef(null);
   const { hoverType } = useCursor();
+  const [isXRay, setIsXRay] = useState(false);
 
   // Reference for storing mouse position to use inside requestAnimationFrame
-  const mouse = useRef({ x: 0, y: 0 });
+  const mouse = useRef({ x: 0, y: 0, lastX: 0, lastY: 0 });
 
   useEffect(() => {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice) return;
+
+    // Signature Feature: X-Ray trigger
+    const onKeyDown = (e) => { if (e.key === 'Shift') setIsXRay(true); };
+    const onKeyUp = (e) => { if (e.key === 'Shift') setIsXRay(false); };
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
 
     // Fast physical dot
     const xToDot = gsap.quickTo(dotRef.current, "x", { duration: 0.1, ease: "power3" });
@@ -31,6 +39,24 @@ export default function CustomCursor() {
     const yToGlow = gsap.quickTo(glowRef.current, "y", { duration: 1.2, ease: "power2.out" });
 
     let rafId = null;
+    let sparks = [];
+
+    // Canvas preparation
+    const canvas = canvasRef.current;
+    let ctx;
+    if (canvas) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx = canvas.getContext('2d');
+    }
+
+    const onResize = () => {
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    };
+    window.addEventListener('resize', onResize);
 
     const render = () => {
       // Set CSS variables for InteractiveGrid to use
@@ -46,6 +72,45 @@ export default function CustomCursor() {
       yToRing2(mouse.current.y);
       xToGlow(mouse.current.x);
       yToGlow(mouse.current.y);
+
+      // Particle Trail Logic
+      // if (ctx) {
+      //   const dx = mouse.current.x - mouse.current.lastX;
+      //   const dy = mouse.current.y - mouse.current.lastY;
+      //   const speed = Math.sqrt(dx * dx + dy * dy);
+
+      //   if (speed > 2 && Math.random() < 0.5) {
+      //     sparks.push({
+      //       x: mouse.current.x,
+      //       y: mouse.current.y,
+      //       vx: (Math.random() - 0.5) * 2 - (dx * 0.05),
+      //       vy: (Math.random() - 0.5) * 2 - (dy * 0.05) - 1, // slight upwards drift
+      //       life: 1,
+      //       color: ['#c084fc', '#a855f7', '#d8b4fe', '#ffffff'][Math.floor(Math.random() * 4)]
+      //     });
+      //   }
+        
+      //   mouse.current.lastX = mouse.current.x;
+      //   mouse.current.lastY = mouse.current.y;
+
+      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //   for (let i = sparks.length - 1; i >= 0; i--) {
+      //     let s = sparks[i];
+      //     s.x += s.vx;
+      //     s.y += s.vy;
+      //     s.life -= 0.035;
+      //     if (s.life <= 0) { sparks.splice(i, 1); continue; }
+      //     ctx.beginPath();
+      //     ctx.arc(s.x, s.y, s.life * 2.5, 0, Math.PI * 2);
+      //     ctx.fillStyle = s.color;
+      //     ctx.shadowBlur = 10;
+      //     ctx.shadowColor = s.color;
+      //     ctx.globalAlpha = s.life;
+      //     ctx.fill();
+      //   }
+      //   ctx.globalAlpha = 1;
+      //   ctx.shadowBlur = 0;
+      // }
 
       // Loop
       rafId = requestAnimationFrame(render);
@@ -64,6 +129,9 @@ export default function CustomCursor() {
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
       cancelAnimationFrame(rafId);
     };
   }, []);
@@ -73,6 +141,21 @@ export default function CustomCursor() {
 
   return (
     <>
+      <canvas 
+        ref={canvasRef} 
+        className="pointer-events-none fixed inset-0 z-[9999] hidden md:block" 
+      />
+      {/* Signature X-Ray Lens */}
+      <div 
+        className="pointer-events-none fixed inset-0 z-[8000] hidden md:block transition-opacity duration-300"
+        style={{
+          opacity: isXRay ? 1 : 0,
+          backdropFilter: 'invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.1)',
+          WebkitBackdropFilter: 'invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.1)',
+          maskImage: `radial-gradient(circle 220px at var(--mouse-x) var(--mouse-y), black 40%, transparent 100%)`,
+          WebkitMaskImage: `radial-gradient(circle 220px at var(--mouse-x) var(--mouse-y), black 40%, transparent 100%)`,
+        }}
+      />
       <div 
         ref={glowRef}
         className="pointer-events-none fixed top-0 left-0 w-[500px] h-[500px] -ml-[250px] -mt-[250px] bg-vl/10 blur-[120px] rounded-full z-0 hidden md:block will-change-transform"
