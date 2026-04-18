@@ -16,13 +16,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { useEffect, useRef, useState } from 'react';
+import EyeCursorSection from '../components/EyeCursorSection';
+import GhostText from '../components/GhostText';
 import MagneticButton from '../components/MagneticButton';
 import PageTransition from '../components/PageTransition';
-import GhostText from '../components/GhostText';
-import EyeCursorSection from '../components/EyeCursorSection';
-import { useLoader } from '../context/LoaderContext';
+
 import { useSound } from '../context/SoundContext';
-import Footer from '../components/Footer';
 
 gsap.registerPlugin(TextPlugin, ScrollTrigger);
 
@@ -323,7 +322,7 @@ function SectionDivider() {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function Home() {
-  const { loaderDone } = useLoader();
+
   const { playSound } = useSound();
   const roleRef = useRef(null);
   const [clock, setClock] = useState('');
@@ -348,7 +347,7 @@ export default function Home() {
 
   /* GSAP */
   useEffect(() => {
-    if (!loaderDone) return;
+    
     
     // Core hero animations run everywhere
     const ctx = gsap.context(() => {
@@ -424,7 +423,7 @@ export default function Home() {
       ctx.revert();
       mm.revert();
     }
-  }, [loaderDone]);
+  }, []);
 
   /* ─────────────────── JSX ─────────────────── */
   return (

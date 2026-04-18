@@ -1,13 +1,30 @@
-import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import PageTransition from '../components/PageTransition';
-import LogoLoop from '../components/LogoLoop';
+import { useEffect, useRef } from 'react';
 import {
-  SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiGreensock, SiThreedotjs, SiRedux,
-  SiNodedotjs, SiExpress, SiPostgresql, SiMongodb, SiRedis, SiGraphql,
-  SiGit, SiDocker, SiFirebase, SiFigma, SiVercel, SiLinux, SiPostman,
+  SiDocker,
+  SiExpress,
+  SiFigma,
+  SiFirebase,
+  SiGit,
+  SiGraphql,
+  SiGreensock,
+  SiLinux,
+  SiMongodb,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiPostgresql,
+  SiPostman,
+  SiReact,
+  SiRedis,
+  SiRedux,
+  SiTailwindcss,
+  SiThreedotjs,
+  SiTypescript,
+  SiVercel,
 } from 'react-icons/si';
+import LogoLoop from '../components/LogoLoop';
+import PageTransition from '../components/PageTransition';
 
 gsap.registerPlugin(ScrollTrigger);
 

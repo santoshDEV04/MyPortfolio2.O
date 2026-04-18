@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useTheme } from "../hooks/useTheme";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 const SPACING = 45;
 
 export default function PerfectInteractiveGrid() {
+  const isMobile = useIsMobile();
   const canvasRef = useRef(null);
   const mouse = useRef({ x: -1000, y: -1000 });
   const { theme } = useTheme();
@@ -149,6 +151,8 @@ export default function PerfectInteractiveGrid() {
       cancelAnimationFrame(raf);
     };
   }, []);
+
+  if (isMobile) return null;
 
   return (
     <canvas 

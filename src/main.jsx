@@ -1,16 +1,17 @@
+import { ReactLenis } from 'lenis/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 import App from './App.jsx';
+
 import './index.css';
-import { LoaderProvider } from './context/LoaderContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <HashRouter>
-      <LoaderProvider>
+    <ReactLenis root>
+      <HashRouter>
         <App />
-      </LoaderProvider>
-    </HashRouter>
+      </HashRouter>
+    </ReactLenis>
   </React.StrictMode>,
 )

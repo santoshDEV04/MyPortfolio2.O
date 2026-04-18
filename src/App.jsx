@@ -1,17 +1,17 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import CustomCursor from './components/CustomCursor';
-import Loader from './components/Loader';
 import InteractiveGrid from './components/InteractiveGrid';
-import ScrollProgress from './components/ScrollProgress';
+
+import Navbar from './components/Navbar';
 import NoiseOverlay from './components/NoiseOverlay';
-import { useSmoothScroll } from './hooks/useSmoothScroll';
-import { TransitionProvider } from './context/TransitionContext';
+import ScrollProgress from './components/ScrollProgress';
 import { SoundProvider } from './context/SoundContext';
+import { TransitionProvider } from './context/TransitionContext';
+import { useSmoothScroll } from './hooks/useSmoothScroll';
 
 import { lazy, Suspense } from 'react';
+import { useIsMobile } from './hooks/useIsMobile';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -21,14 +21,19 @@ const Contact = lazy(() => import('./pages/Contact'));
 
 export default function App() {
   const location = useLocation();
+  const isMobile = useIsMobile();
   useSmoothScroll();
 
   return (
     <SoundProvider>
       <TransitionProvider>
-        <Loader />
-        <CustomCursor />
-        <InteractiveGrid />
+
+        {!isMobile && (
+          <>
+            <CustomCursor />
+            <InteractiveGrid />
+          </>
+        )}
         <ScrollProgress />
         <NoiseOverlay />
         <Navbar />

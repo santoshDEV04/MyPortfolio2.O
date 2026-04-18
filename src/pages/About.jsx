@@ -1,10 +1,10 @@
-import PageTransition from '../components/PageTransition';
-import SectionReveal from '../components/SectionReveal';
-import MagneticButton from '../components/MagneticButton';
-import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { GraduationCap, School } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import MagneticButton from '../components/MagneticButton';
+import PageTransition from '../components/PageTransition';
+import SectionReveal from '../components/SectionReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
