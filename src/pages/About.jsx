@@ -92,18 +92,17 @@ export default function About() {
                   Hey there! <img src="/wave.gif" alt="👋" className="ml-3 w-8 sm:w-10 h-8 sm:h-10 inline-block -translate-y-1" />
                 </h2>
                 <p className="text-base sm:text-lg md:text-xl text-muted leading-relaxed mb-4 font-medium">
-                  I'm <span className="text-vl">Santosh Kumar Dash</span>, a passionate Full Stack Developer
-                  with expertise in React, Node.js, and cutting-edge web technologies.
+                  I'm <span className="text-vl">Santosh Kumar Dash</span>, a Full Stack Developer & AI Systems Enthusiast actively exploring <span className="text-vl font-semibold">Agentic AI</span> and <span className="text-vl font-semibold">Generative AI</span>.
                 </p>
               </SectionReveal>
 
               <SectionReveal delay={0.4}>
                 <p className="text-sm sm:text-base md:text-lg text-muted/80 leading-relaxed mb-6">
-                  I obsess over the micro-interactions. The 50ms transitions between states that users don't consciously see, but definitely feel. Great software isn't just written—it's directed.
+                  Deeply fascinated by autonomous AI agents, multi-agent orchestrations, and LLM-powered architectures. I combine frontend craftsmanship with intelligent Gen AI backends to craft responsive, futuristic web applications.
                 </p>
                 <div className="bg-fg/[0.03] border border-fg/10 p-5 rounded-sm">
-                  <h4 className="text-xs font-mono tracking-widest text-vl mb-2 uppercase">Currently</h4>
-                  <p className="text-sm text-dim">Reading <i className="text-muted">Designing Data-Intensive Applications</i> and building an open-source, highly optimised state library.</p>
+                  <h4 className="text-xs font-mono tracking-widest text-vl mb-2 uppercase">⚡ Currently Learning & Building</h4>
+                  <p className="text-sm text-dim">Mastering <i className="text-muted">Agentic AI Workflows</i>, LLM Tool Calling, LangChain, MCP (Model Context Protocol), and Generative AI application design.</p>
                 </div>
               </SectionReveal>
 

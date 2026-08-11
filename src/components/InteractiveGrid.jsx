@@ -53,28 +53,34 @@ export default function PerfectInteractiveGrid() {
       const mx = mouse.current.x;
       const my = mouse.current.y;
       
-      // Update and draw ripples
+      // Draw ultra-subtle ambient cursor glow gradient overlay
+      const grad = ctx.createRadialGradient(mx, my, 0, mx, my, 240);
+      const isLight = theme === 'light';
+      grad.addColorStop(0, isLight ? 'rgba(147, 51, 234, 0.02)' : 'rgba(168, 85, 247, 0.02)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      
+      ctx.fillStyle = grad;
+      ctx.fillRect(mx - 240, my - 240, 480, 480);
+
+      // Ultra-low ambient theme colors
+      const baseDotColor = isLight ? "rgba(0, 0, 0, 0.02)" : "rgba(255, 255, 255, 0.015)";
+      const activeDotColor = isLight ? "rgba(147, 51, 234, 0.12)" : "rgba(168, 85, 247, 0.15)";
+      const intenseDotColor = isLight ? "rgba(147, 51, 234, 0.25)" : "rgba(192, 132, 252, 0.28)";
+
+      // Update and draw ripples with whisper-thin opacity
       for (let i = ripples.length - 1; i >= 0; i--) {
         const r = ripples[i];
-        r.radius += 10;
-        r.life -= 0.025;
+        r.radius += 7;
+        r.life -= 0.02;
         if (r.life <= 0) { ripples.splice(i, 1); continue; }
         
         ctx.beginPath();
         ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(168, 85, 247, ${r.life * 0.4})`;
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(168, 85, 247, ${r.life * 0.08})`;
+        ctx.lineWidth = 0.75;
         ctx.stroke();
       }
 
-      
-      // Determine theme colors dynamically inside RAF
-      const isLight = theme === 'light';
-      const baseDotColor = isLight ? "rgba(0, 0, 0, 0.01)" : "rgba(200, 200, 255, 0.1)";
-      const activeDotColor = isLight ? "rgba(147, 51, 234, 0.08)" : "rgba(168, 85, 247, 0.6)";
-      const intenseDotColor = isLight ? "#9333ea" : "#a855f7";
-      const glowCenter = isLight ? "rgba(147, 51, 234, 0.05)" : "rgba(139, 92, 246, 0.12)";
-      
       for (let i = 0; i < points.length; i++) {
         const p = points[i];
         
@@ -86,11 +92,10 @@ export default function PerfectInteractiveGrid() {
         let tx = p.ox;
         let ty = p.oy;
         
-        if (dist < 180) {
-          const force = (180 - dist) / 180;
-          // pull slightly towards mouse (magnetic effect)
-          tx = p.ox + dx * force * 0.25;
-          ty = p.oy + dy * force * 0.25;
+        if (dist < 140) {
+          const force = (140 - dist) / 140;
+          tx = p.ox + dx * force * 0.14;
+          ty = p.oy + dy * force * 0.14;
         }
 
         // Ripple interaction
@@ -98,46 +103,34 @@ export default function PerfectInteractiveGrid() {
           const rdx = r.x - p.ox;
           const rdy = r.y - p.oy;
           const rdist = Math.sqrt(rdx * rdx + rdy * rdy);
-          // if the ripple wave front is hitting this point, push it out
-          if (Math.abs(rdist - r.radius) < 35) {
-            const rforce = (35 - Math.abs(rdist - r.radius)) / 35;
-            tx -= (rdx / rdist) * rforce * 18 * r.life;
-            ty -= (rdy / rdist) * rforce * 18 * r.life;
+          if (Math.abs(rdist - r.radius) < 25) {
+            const rforce = (25 - Math.abs(rdist - r.radius)) / 25;
+            tx -= (rdx / rdist) * rforce * 10 * r.life;
+            ty -= (rdy / rdist) * rforce * 10 * r.life;
           }
         }
         
-        p.vx += (tx - p.x) * 0.12; // Spring
-        p.vy += (ty - p.y) * 0.12;
-        p.vx *= 0.82; // Friction
-        p.vy *= 0.82;
+        p.vx += (tx - p.x) * 0.08;
+        p.vy += (ty - p.y) * 0.08;
+        p.vx *= 0.85;
+        p.vy *= 0.85;
         
         p.x += p.vx;
         p.y += p.vy;
         
         const speed = Math.abs(p.vx) + Math.abs(p.vy);
-        const isActive = speed > 0.4 || dist < 180;
+        const isActive = speed > 0.25 || dist < 140;
         
         ctx.beginPath();
         if (isActive) {
-           ctx.arc(p.x, p.y, speed > 0.8 ? 2 : 1.5, 0, Math.PI * 2);
+           ctx.arc(p.x, p.y, speed > 0.8 ? 1.4 : 1.0, 0, Math.PI * 2);
            ctx.fillStyle = speed > 0.8 ? intenseDotColor : activeDotColor;
         } else {
-           // draw standard faint cross or dot
-           ctx.arc(p.x, p.y, 1, 0, Math.PI * 2);
+           ctx.arc(p.x, p.y, 0.65, 0, Math.PI * 2);
            ctx.fillStyle = baseDotColor; 
         }
         ctx.fill();
       }
-      
-      // Draw smooth cursor glow gradient overlay
-      const grad = ctx.createRadialGradient(mx, my, 0, mx, my, 350);
-      grad.addColorStop(0, glowCenter);
-      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      
-      ctx.globalCompositeOperation = isLight ? 'multiply' : 'lighter';
-      ctx.fillStyle = grad;
-      ctx.fillRect(mx - 350, my - 350, 700, 700);
-      ctx.globalCompositeOperation = 'source-over';
 
       raf = requestAnimationFrame(animate);
     };

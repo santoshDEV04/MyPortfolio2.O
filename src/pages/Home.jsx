@@ -37,12 +37,12 @@ const hackathons = [
 ];
 
 const plans = [
-  { num: '01', title: 'Open Source',        tag: 'Q1 2026', desc: 'Releasing a heavily optimised minimal state-management library for React 19.', icon: '⬡' },
-  { num: '02', title: '3D Web Experiences', tag: 'Q2 2026', desc: 'Diving deep into Three.js and WebGL shaders to build interactive cinematic web environments.', icon: '◈' },
-  { num: '03', title: 'Tech Blog',          tag: 'Q3 2026', desc: 'Documenting advanced frontend architectures, GSAP animation breakdowns, and engineering logs.', icon: '▣' },
+  { num: '01', title: 'Agentic & Gen AI Systems', tag: 'ACTIVE FOCUS', desc: 'Building multi-agent workflows, autonomous LLM agent tools, and RAG architectures.', icon: '⚡' },
+  { num: '02', title: 'Open Source',        tag: 'Q1 2026', desc: 'Releasing a heavily optimised minimal state-management library for React 19.', icon: '⬡' },
+  { num: '03', title: '3D Web Experiences', tag: 'Q2 2026', desc: 'Diving deep into Three.js and WebGL shaders to build interactive cinematic web environments.', icon: '◈' },
 ];
 
-const roles = ['Software Developer', 'UI Engineer', 'Code Architect', 'Web Developer'];
+const roles = ['Agentic & Gen AI Learner', 'AI Systems Architect', 'Software Developer', 'UI Engineer', 'Code Architect'];
 
 // ─── Global CSS ──────────────────────────────────────────────────────────────
 const CSS = `
@@ -101,8 +101,8 @@ body{background:var(--bg);color:var(--fg);font-family:var(--font-m);-webkit-font
 
 /* ── Dot-grid bg ── */
 .dot-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:radial-gradient(rgba(147,51,234,0.2) 1px,transparent 1px);
-  background-size:38px 38px;opacity:0.3}
+  background-image:radial-gradient(rgba(147,51,234,0.06) 1px,transparent 1px);
+  background-size:38px 38px;opacity:0.12}
 
 /* ── Scanlines ── */
 .scanlines{position:fixed;inset:0;z-index:0;pointer-events:none;
@@ -242,7 +242,7 @@ function Particles() {
     draw();
     return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); window.removeEventListener('mousemove', handleMouse); };
   }, []);
-  return <canvas ref={ref} aria-hidden style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none', opacity:.55 }} />;
+  return <canvas ref={ref} aria-hidden style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none', opacity:.25 }} />;
 }
 
 // ─── HUD bracket corners ─────────────────────────────────────────────────────
@@ -502,7 +502,7 @@ export default function Home() {
                 letterSpacing:'.2em', color:'var(--vl)',
                 marginBottom:'0.6rem', fontWeight: 600, textTransform: 'uppercase'
               }}>
-                // SYSTEM_ARCHITECT
+                // AGENTIC_AI_ARCHITECT & DEVELOPER
               </div>
 
               {/* NAME with glitch */}
@@ -532,7 +532,8 @@ export default function Home() {
               {/* status badges */}
               <div style={{ display:'flex', gap:'1.2rem', marginTop:'1.8rem', fontFamily:'var(--font-m)', fontSize:'.55rem', letterSpacing:'.25em', color:'var(--dim)', flexWrap:'wrap' }}>
                 {[
-                  { label:'STATUS: OPEN FOR NEW PROJECTS', clr:'var(--vl)' },
+                  { label:'FOCUS: AGENTIC & GEN AI', clr:'var(--vl)' },
+                  { label:'STATUS: OPEN FOR NEW PROJECTS', clr:'rgba(168,85,247,.6)' },
                   { label:'LOC: REMOTE / GLOBE', clr:'rgba(168,85,247,.4)' },
                 ].map(({ label, clr }) => (
                   <span key={label} style={{ display:'flex', alignItems:'center', gap:'.5rem' }}>
@@ -548,8 +549,8 @@ export default function Home() {
                 fontFamily:'var(--font-d)', fontSize:'clamp(1.2rem, 3vw, 2.2rem)',
                 color:'var(--fg)', lineHeight:1.3, maxWidth:'32ch', letterSpacing:'-0.02em', fontWeight:800
               }}>
-                Architecting the Void.<br/>
-                <span style={{ color:'var(--vl)' }}>Engineering the Inevitable.</span>
+                Architecting Agentic Workflows.<br/>
+                <span style={{ color:'var(--vl)' }}>Engineering Generative Intelligence.</span>
               </h2>
 
               {/* CTAs */}

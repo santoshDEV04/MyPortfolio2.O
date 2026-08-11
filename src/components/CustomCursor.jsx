@@ -158,7 +158,7 @@ export default function CustomCursor() {
       />
       <div 
         ref={glowRef}
-        className="pointer-events-none fixed top-0 left-0 w-[500px] h-[500px] -ml-[250px] -mt-[250px] bg-vl/10 blur-[120px] rounded-full z-0 hidden md:block will-change-transform"
+        className="pointer-events-none fixed top-0 left-0 w-[400px] h-[400px] -ml-[200px] -mt-[200px] bg-vl/5 blur-[140px] rounded-full z-0 hidden md:block will-change-transform"
       />
       <div className="pointer-events-none fixed inset-0 z-[10000] mix-blend-difference hidden md:block">
         <div 

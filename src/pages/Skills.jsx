@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useEffect, useRef } from 'react';
+import { Bot, Sparkles, Cpu, Zap } from 'lucide-react';
 import {
   SiDocker,
   SiExpress,
@@ -13,8 +14,10 @@ import {
   SiMongodb,
   SiNextdotjs,
   SiNodedotjs,
+  SiOpenai,
   SiPostgresql,
   SiPostman,
+  SiPython,
   SiReact,
   SiRedis,
   SiRedux,
@@ -29,16 +32,20 @@ import PageTransition from '../components/PageTransition';
 gsap.registerPlugin(ScrollTrigger);
 
 const row1 = [
+  { node: <SiOpenai />,      title: 'OpenAI API' },
+  { node: <Bot />,           title: 'Agentic AI' },
+  { node: <SiPython />,      title: 'Python' },
   { node: <SiReact />,       title: 'React' },
   { node: <SiNextdotjs />,   title: 'Next.js' },
   { node: <SiTypescript />,  title: 'TypeScript' },
   { node: <SiTailwindcss />, title: 'Tailwind' },
   { node: <SiGreensock />,   title: 'GSAP' },
   { node: <SiThreedotjs />,  title: 'Three.js' },
-  { node: <SiRedux />,       title: 'Redux' },
 ];
 
 const row2 = [
+  { node: <Sparkles />,      title: 'Generative AI' },
+  { node: <Cpu />,           title: 'LLM Agents' },
   { node: <SiNodedotjs />,   title: 'Node.js' },
   { node: <SiExpress />,     title: 'Express' },
   { node: <SiPostgresql />,  title: 'PostgreSQL' },
@@ -48,6 +55,7 @@ const row2 = [
 ];
 
 const row3 = [
+  { node: <Zap />,       title: 'MCP Protocol' },
   { node: <SiGit />,     title: 'Git' },
   { node: <SiDocker />,  title: 'Docker' },
   { node: <SiFirebase />,title: 'Firebase' },
@@ -58,6 +66,16 @@ const row3 = [
 ];
 
 const categories = [
+  {
+    label: 'Agentic & Gen AI',
+    desc: 'Building autonomous AI agent tools, LLM workflows, and generative architectures.',
+    skills: [
+      { name: 'Agentic AI & Multi-Agent Systems', val: 85 },
+      { name: 'Generative AI & LLM Tooling',      val: 88 },
+      { name: 'Prompt Engineering & RAG',          val: 90 },
+      { name: 'LangChain / MCP / OpenAI APIs',    val: 82 },
+    ],
+  },
   {
     label: 'Frontend',
     desc: 'Building fast, beautiful, accessible UIs with modern tooling.',
