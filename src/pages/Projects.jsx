@@ -61,7 +61,7 @@ const allProjects = [
 
 const CATEGORIES = ['All', 'Frontend', 'Backend', 'Fullstack'];
 
-function ProjectCard({ project, index, isFeatured }) {
+function ProjectCard({ project, isFeatured }) {
   const cardRef = useRef(null);
   const tagsRef = useRef(null);
 
